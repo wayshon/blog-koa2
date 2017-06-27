@@ -6,8 +6,10 @@ const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 
-const index = require('./routes/index')
-const users = require('./routes/users')
+const router = require('koa-router')();
+const api = require('./routes/api');
+
+const responseFormatter = require('./middlewares/ResponseFormatter');
 
 // error handler
 onerror(app)
@@ -32,8 +34,11 @@ app.use(async (ctx, next) => {
   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
 })
 
+//添加格式化处理响应结果的中间件，在添加路由之前调用
+app.use(responseFormatter('^/api'));
+
 // routes
-app.use(index.routes(), index.allowedMethods())
-app.use(users.routes(), users.allowedMethods())
+router.use('/api', api.routes(), api.allowedMethods());
+app.use(router.routes(), router.allowedMethods());
 
 module.exports = app
