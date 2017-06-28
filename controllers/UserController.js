@@ -37,11 +37,11 @@ class UserController {
 
     async login(ctx, next) {
         let md5 = crypto.createHash('md5'),
-            name = ctx.request.body.name,
+            username = ctx.request.body.username,
             password = md5.update(ctx.request.body.password).digest('hex');
 
         try {
-            let result = await this.dao.getByName(name);
+            let result = await this.dao.getByName(username);
             if (result == null) throw new ApiError(ApiErrorNames.USER_NOT_EXIST);
             if (result[0].password != password) throw new ApiError(ApiErrorNames.PASSWORD_ERROR);
             ctx.body = result;
