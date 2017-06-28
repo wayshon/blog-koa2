@@ -9,7 +9,7 @@ module.exports = {
         user: 'root',
         database: 'blog',
         host: '127.0.0.1',
-        password: '123456',
+        password: 'root',
         dbPort: 3306,
         cookieSecret: 'blog'
     }
