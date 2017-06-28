@@ -35,8 +35,10 @@ class UserController {
                 userid: result.insertId
             };
         } catch (error) {
-            console.log(error)
-            throw new ApiError(ApiErrorNames.UNKNOW_ERROR);
+            if (error instanceof ApiError) 
+                throw error
+            else
+                throw new ApiError(ApiErrorNames.UNKNOW_ERROR);
         }
     }
 
