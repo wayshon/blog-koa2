@@ -34,6 +34,28 @@ app.use(async (ctx, next) => {
   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
 })
 
+const mysql = require('promise-mysql'),
+      $db = require('./config/db'),
+      pool = mysql.createPool($db.mysql);
+
+pool.getConnection().then(function(connection) {
+    global.poolConnection = connection;
+}).catch(function(err) {
+    throw err
+});
+
+// app.use(async (ctx, next) => {
+//     // global.poolConnection = await pool.getConnection();
+//     // next();
+
+//     pool.getConnection().then(function(connection) {
+//       global.poolConnection = connection;
+//       next()
+//     }).catch(function(err) {
+//       throw err
+//     });
+// })
+
 //添加格式化处理响应结果的中间件，在添加路由之前调用
 app.use(responseFormatter('^/api'));
 
