@@ -6,6 +6,9 @@ const crypto = require('crypto'),
       ApiError = require('../error/ApiError'),
       ApiErrorNames = require('../error/ApiErrorNames');
 
+const jwt = require("jsonwebtoken"),
+      config = require("../config");
+
 class UserController {
 
     constructor(d) {
@@ -39,12 +42,20 @@ class UserController {
         let md5 = crypto.createHash('md5'),
             username = ctx.request.body.username,
             password = md5.update(ctx.request.body.password).digest('hex');
-
+        
         try {
             let result = await this.dao.getByName(username);
             if (result == null) throw new ApiError(ApiErrorNames.USER_NOT_EXIST);
             if (result[0].password != password) throw new ApiError(ApiErrorNames.PASSWORD_ERROR);
-            ctx.body = result;
+            
+            let authToken = jwt.sign({
+                user: 6666,
+                exp: new Date().getTime() + 1000 * 60 * 60 * 24, //1天
+            }, config.jwtSecret);
+
+            ctx.body = {
+                token: authToken
+            }
         } catch (error) {
             console.log(error)
             if (error instanceof ApiError) 
