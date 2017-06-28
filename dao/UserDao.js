@@ -7,38 +7,6 @@ const mysql = require('promise-mysql'),
 
 
 class UserDao {
-    // getAllUser(callback) {
-    //     pool.getConnection((err, connection) => {
-    //         if (err) {
-    //             callback(err)
-    //         } else {
-    //             connection.query($userSql.queryAll, function (err, result) {
-    //                 callback(err, result);
-    //             });
-    //         }
-    //         connection.release();
-    //     });
-    // }
-
-    // getAllUser() {
-    //     return new Promise(function(resolve, reject) {
-    //         pool.getConnection((error, connection) => {
-    //             if (error){
-    //                 reject(error);
-    //             } else {
-    //                 connection.query($userSql.queryAll, function (err, result) {
-    //                     if (err) {
-    //                         reject(err);
-    //                     } else {
-    //                         resolve(result);
-    //                     }
-    //                 });
-    //             }
-    //             connection.release();
-    //         });
-    //     });
-    // }
-
     async add(name, password, avatar, nickname) {
         let connection = await pool.getConnection();
         let result = await connection.query($userSql.insert, [name, password, avatar, nickname]);

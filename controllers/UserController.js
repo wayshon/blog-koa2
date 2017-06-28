@@ -8,18 +8,6 @@ const crypto = require('crypto'),
       ApiErrorNames = require('../error/ApiErrorNames');
 
 class UserController {
-    // getAllUser(ctx, next) {
-    //     userDao.getAllUser((err, result) => {
-    //         if (err) {
-    //             throw new ApiError(ApiErrorNames.UNKNOW_ERROR);
-    //         }
-    //         console.log('================')
-    //         console.log(result)
-    //         ctx.body = result;
-    //     })
-    //     console.log('-------------------')
-    // }
-
     async regist(ctx, next) {
         let name = ctx.request.body.name,
             nickname = ctx.request.body.nickname,
