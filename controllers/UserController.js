@@ -13,7 +13,6 @@ class UserController {
     }
 
     async regist(ctx, next) {
-        console.log('------')
         let md5 = crypto.createHash('md5'),
             name = ctx.request.body.name,
             nickname = ctx.request.body.nickname,
@@ -21,7 +20,6 @@ class UserController {
             password = md5.update(ctx.request.body.password).digest('hex');
 
         try {
-            console.log('======')
             let checkUsers = await this.dao.getByName(name);
             if (checkUsers.length > 0) throw new ApiError(ApiErrorNames.USER_EXISTED);
             let result = await this.dao.add(name, password, avatar, nickname);
@@ -48,6 +46,7 @@ class UserController {
             if (result[0].password != password) throw new ApiError(ApiErrorNames.PASSWORD_ERROR);
             ctx.body = result;
         } catch (error) {
+            console.log(error)
             if (error instanceof ApiError) 
                 throw error
             else
