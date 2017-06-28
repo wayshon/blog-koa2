@@ -51,7 +51,10 @@ class UserController {
             if (result[0].password != password) throw new ApiError(ApiErrorNames.PASSWORD_ERROR);
             ctx.body = result;
         } catch (error) {
-            throw new ApiError(ApiErrorNames.UNKNOW_ERROR);
+            if (error instanceof ApiError) 
+                throw error
+            else
+                throw new ApiError(ApiErrorNames.UNKNOW_ERROR);
         }
     }
     
