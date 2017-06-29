@@ -47,12 +47,12 @@ function Insert(opt) {
         Object.keys(params).forEach((item, index) => {
             let value = params[item];
             keyStr += item; 
-            valueStr += value;
-            index < params.length - 1 && (keyStr += ', ', valueStr += ', ');
+            valueStr += `'${value}'`;
+            index < Object.keys(params).length - 1 && (keyStr += ', ', valueStr += ', ');
         });
     }
 
-    let sql = `Insert INTO ${table}(${keyStr}) where(${valueStr})`;
+    let sql = `Insert INTO ${table} (${keyStr}) VALUES (${valueStr});`;
     console.log(sql);
     return sql;
 }
@@ -66,30 +66,23 @@ function Update(opt) {
     let targetStr = '';
     let paramsStr = '';
     
-    target instanceof Array ? target.forEach((item, index) => {
-        targetStr += item;
-        index < target.length - 1 && (targetStr += ',');
-    }) : (targetStr = '*');
-
     if (typeof target === 'object') {
-        targetStr = ' where ';
         Object.keys(target).forEach((item, index) => {
             let value = target[item];
             targetStr += `${item} = '${value}'`;
-            index < target.length - 1 && (targetStr += ',');
+            index < Object.keys(params).length - 1 && (targetStr += ',');
         });
     }
 
     if (typeof params === 'object') {
-        paramsStr = ' where ';
         Object.keys(params).forEach((item, index) => {
             let value = params[item];
             paramsStr += `${item} = '${value}'`;
-            index < params.length - 1 && (paramsStr += ',');
+            index < Object.keys(params).length - 1 && (paramsStr += ',');
         });
     }
 
-    let sql = `Update ${table} set ${targetStr} where ${paramsStr}`;
+    let sql = `Update ${table} set ${targetStr} where ${paramsStr};`;
     console.log(sql);
     return sql;
 }
@@ -102,15 +95,14 @@ function Delete(opt) {
     let paramsStr = '';
     
     if (typeof params === 'object') {
-        paramsStr = ' where ';
         Object.keys(params).forEach((item, index) => {
             let value = params[item];
             paramsStr += `${item} = '${value}'`;
-            index < params.length - 1 && (paramsStr += ',');
+            index < Object.keys(params).length - 1 && (paramsStr += ',');
         });
     }
 
-    let sql = `Insert INTO ${table} where ${paramsStr}`;
+    let sql = `delete from ${table} where ${paramsStr};`;
     console.log(sql);
     return sql;
 }

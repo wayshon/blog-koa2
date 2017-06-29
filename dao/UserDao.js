@@ -19,7 +19,7 @@ class UserDao {
             params: {
                 username: name
             }
-        }));
+        }))[0];
     }
 
     async get() {

@@ -10,6 +10,7 @@ const router = require('koa-router')();
 const api = require('./routes/api');
 
 const responseFormatter = require('./middlewares/ResponseFormatter');
+const jwtFilter = require("./middlewares/JwtFilter");
 
 const mysql = require('promise-mysql'),
       $db = require('./config/db'),

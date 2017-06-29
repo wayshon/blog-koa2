@@ -2,7 +2,6 @@
 crypto 是 Node.js 的一个核心模块，用它生成散列值来加密密码
 */
 const crypto = require('crypto'),
-      fs = require('fs'),
       ApiError = require('../error/ApiError'),
       ApiErrorNames = require('../error/ApiErrorNames');
 
