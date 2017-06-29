@@ -35,7 +35,7 @@ const urlFilter = (pattern) => {
                 }
             }
             //继续抛，让外层中间件处理日志
-            // throw error;
+            throw error;
         }
 
         //通过正则的url进行格式化处理

@@ -60,7 +60,7 @@ app.use((ctx, next) => {
 const jwtFilter = require("./middlewares/JwtFilter");
 // app.use(jwtFilter([/^\/api/]).unless({ path: [/\/login$/] }))
 app.use(jwtFilter([/^\/api/]).unless(function(ctx) {
-  if ([/\/login$/].some(reg => ctx.request.url.match(reg)) || (ctx.request.url.match(/\/users$/) && ctx.request.method == 'POST')) 
+  if (ctx.request.method == 'OPTIONS' || [/\/login$/].some(reg => ctx.request.url.match(reg)) || (ctx.request.url.match(/\/users$/) && ctx.request.method == 'POST')) 
     return true;
   return false;
 }))
