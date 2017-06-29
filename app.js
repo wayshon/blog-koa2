@@ -5,6 +5,7 @@ const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
+const koaBody = require('koa-body');
 
 const router = require('koa-router')();
 const api = require('./routes/api');
@@ -18,6 +19,9 @@ const mysql = require('promise-mysql'),
 
 // error handler
 onerror(app)
+
+//Support multipart, urlencoded and json request bodies. Provides same functionality as Express's bodyParser - multer
+app.use(koaBody({ multipart: true }));
 
 // middlewares
 app.use(bodyparser({
@@ -66,7 +70,14 @@ app.use((ctx, next) => {
 // }))
 
 //添加格式化处理响应结果的中间件，在添加路由之前调用
-app.use(responseFormatter('^/api'));
+// app.use(responseFormatter('^/api'));
+
+// custom 404
+// app.use(async function(ctx, next) {
+//   await next();
+//   if (ctx.body || !ctx.idempotent) return;
+//   ctx.redirect('/404.html');
+// });
 
 // routes
 router.use('/api', api.routes(), api.allowedMethods());

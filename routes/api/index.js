@@ -8,6 +8,7 @@ router.use('/users', userRouter.routes(), userRouter.allowedMethods());
 router.use('/articles', articleRouter.routes(), articleRouter.allowedMethods());
 
 
+router.post('/uploadbase64', (ctx, next) => utilsController.uploadBase64(ctx, next));
 router.post('/upload', (ctx, next) => utilsController.upload(ctx, next));
 
 module.exports = router;
