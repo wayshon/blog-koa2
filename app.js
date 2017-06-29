@@ -45,7 +45,7 @@ pool.getConnection().then((connection) => {
     throw err;
 });
 
-//处理报错
+//处理jwt 401 报错
 app.use((ctx, next) => {
   return next().catch((err) => {
     if (err.status == 401) {
@@ -58,19 +58,19 @@ app.use((ctx, next) => {
 });
 
 //jwt过滤, 第一个参数为需要验证的路径，不写就是全部验证。第二个参数是需要忽略的路径
-const jwtFilter = require("./middlewares/JwtFilter");
 // app.use(jwtFilter([/^\/api/]).unless({ path: [/\/login$/] }))
-app.use(jwtFilter([/^\/api/]).unless(function(ctx) {
-  if (ctx.request.method == 'OPTIONS' || [/\/login$/].some(reg => ctx.request.url.match(reg)) || (ctx.request.url.match(/\/users$/) && ctx.request.method == 'POST')) 
-    return true;
-  return false;
-}))
+// app.use(jwtFilter([/^\/api/]).unless(function(ctx) {
+//   if (ctx.request.method == 'OPTIONS' || [/\/login$/].some(reg => ctx.request.url.match(reg)) || (ctx.request.url.match(/\/users$/) && ctx.request.method == 'POST')) 
+//     return true;
+//   return false;
+// }))
 
 //添加格式化处理响应结果的中间件，在添加路由之前调用
 app.use(responseFormatter('^/api'));
 
 // routes
 router.use('/api', api.routes(), api.allowedMethods());
+
 app.use(router.routes(), router.allowedMethods());
 
 module.exports = app

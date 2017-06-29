@@ -23,7 +23,7 @@ module.exports = (regs) => {
       if (decoded.exp <= Date.now()) {
         ctx.throw(401, 'Access token has expired');
       } else {
-        ctx.user = decoded.user;
+        ctx.state.user = decoded.user;
         next();
       }
     } else {
