@@ -17,8 +17,7 @@ class ArticleDao {
 
     async getTitleList() {
         return await global.poolConnection.query(sql.Select({
-            table: 'article',
-            target: ['title'],
+            table: 'article'
         }));
     }
 
