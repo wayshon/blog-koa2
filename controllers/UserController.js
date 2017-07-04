@@ -5,7 +5,8 @@ const crypto = require('crypto'),
       ApiError = require('../error/ApiError'),
       jwt = require("jsonwebtoken"),
       config = require("../config"),
-      tool = require("../utils/tools");
+      tool = require("../utils/tools"),
+      ApiErrorNames = require('../error/ApiErrorNames');
 
 class UserController {
 
@@ -14,69 +15,52 @@ class UserController {
     }
 
     async regist(ctx, next) {
-        // let req = ctx.request;
+        let req = ctx.request.body;
 
-        // if (tool.isBlank(req.userName)) throw new ApiError({code: 103, msg: '用户已存在'})
+        if (tool.isBlank(req.userName)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 userName');
+        if (tool.isBlank(req.password)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 password');
+        if (tool.isBlank(req.nickName)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 nickName');
+        if (tool.isBlank(req.email)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 email');
+        if (tool.isBlank(req.mobile)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 mobile');
+        if (tool.isBlank(req.manager)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 manager');
 
-        let md5 = crypto.createHash('md5'),
-            name = ctx.request.body.name,
-            nickname = ctx.request.body.nickname,
-            avatar = ctx.request.body.avatar,
-            password = md5.update(ctx.request.body.password).digest('hex');
+        let userName = req.userName,
+            md5 = crypto.createHash('md5'),
+            password = md5.update(req.password).digest('hex'),
+            nickName = req.nickName,
+            email = req.email,
+            mobile = req.mobile,
+            avatar = req.avatar || '',
+            manager = req.manager;
+            
+        let checkUsers = await this.dao.getByName(userName);
+        if (checkUsers.length > 0) throw new ApiError(ApiErrorNames.USER_EXISTED);
+        let result = await this.dao.add({userName,password,nickName,email,mobile,avatar,manager});
 
-        try {
-            let checkUsers = await this.dao.getByName(name);
-            if (checkUsers.length > 0) throw new ApiError({code: 103, msg: '用户已存在'});
-            let result = await this.dao.add(name, password, avatar, nickname);
-            ctx.body = {
-                userid: result.insertId
-            };
-        } catch (error) {
-            console.log(error)
-            if (error instanceof ApiError) 
-                throw error
-            else
-                throw new ApiError({code: -1, msg: '未知错误'});
-        }
+        ctx.body = {}
     }
 
     async login(ctx, next) {
-        let md5 = crypto.createHash('md5'),
-            username = ctx.request.body.username,
-            password = md5.update(ctx.request.body.password).digest('hex');
+        let req = ctx.request.body;
+
+        if (tool.isBlank(req.userName)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 userName');
+        if (tool.isBlank(req.password)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 password');
+
+        let userName = req.userName,
+            md5 = crypto.createHash('md5'),
+            password = md5.update(req.password).digest('hex');
         
-        try {
-            let result = await this.dao.getByName(username);
-            if (result == null) throw new ApiError({code: 101, msg: '用户不存在'});
-            if (result[0].password != password) throw new ApiError({code: 102, msg: '密码错误'});
+        let result = await this.dao.getByName(userName);
+        if (result.length == 0) throw new ApiError(ApiErrorNames.USER_NOT_EXIST);
+        if (result[0].password != password) throw new ApiError(ApiErrorNames.PASSWORD_ERROR);
             
-            let authToken = jwt.sign({
-                user: 6666,
-                exp: new Date().getTime() + 1000 * 60 * 60 * 24, //1天
-            }, config.jwtSecret);
+        let authToken = jwt.sign({
+            user: result[0].id,
+            exp: new Date().getTime() + 1000 * 60 * 60 * 24, //1天
+        }, config.jwtSecret);
 
-            ctx.body = {
-                token: authToken
-            }
-        } catch (error) {
-            console.log(error)
-            if (error instanceof ApiError) 
-                throw error
-            else
-                throw new ApiError({code: -1, msg: '未知错误'});
-        }
-    }
-
-    async getAllUser(ctx, next) {
-        try {
-            let result = await this.dao.getAll();
-            ctx.body = result;
-        } catch (error) {
-            console.log(error)
-            if (error instanceof ApiError) 
-                throw error
-            else
-                throw new ApiError({code: -1, msg: '未知错误'});
+        ctx.body = {
+            token: authToken
         }
     }
 }

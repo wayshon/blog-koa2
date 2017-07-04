@@ -17,13 +17,18 @@ const mysql = require('promise-mysql'),
       $db = require('./config/db'),
       pool = mysql.createPool($db.mysql);
 
+const ApiError = require('./error/ApiError');
+
 // error handler
 // onerror(app)
 //处理未捕获的错误
 app.use((ctx, next) => {
   return next().catch((err) => {
-    ctx.status = 500;
-    ctx.body = 'server error'
+    console.log(err)
+    if(!(err instanceof ApiError)) {
+      ctx.status = 500;
+      ctx.body = 'server error'
+    }
   });
 });
 

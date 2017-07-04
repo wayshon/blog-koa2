@@ -1,42 +1,45 @@
-const sql = require('./Sql');
+// const sql = require('./Sql');
+const $sql = require('./userSqlMapping');
 
 class UserDao {
-    async add(name, password, avatar, nickname) {
-        return await global.poolConnection.query(sql.Insert({
-            table: 'user',
-            params: {
-                username: name,
-                password: password,
-                avatar: avatar,
-                nickname: nickname
-            }
-        }));
+
+    async add(user) {
+        let {userName,password,nickName,email,mobile,avatar,manager} = user;
+        return await global.poolConnection.query($sql.insert, [userName,password,nickName,email,mobile,avatar,manager]);
     }
 
     async getByName(name) {
-        return await global.poolConnection.query(sql.Select({
-            table: 'user',
-            params: {
-                username: name
-            }
-        }))[0];
+        return await global.poolConnection.query($sql.queryByName, name);
     }
 
-    async get() {
-        return await global.poolConnection.query(sql.Select({
-            table: 'user',
-        }));
+    async get(id) {
+        return await global.poolConnection.query($sql.queryById, id);
     }
 
-    async getAll() {
-        return await global.poolConnection.query(sql.Select({
-            table: 'user',
-            target: ['username', 'nickname'],
-            params: {
-                id: '6'
-            }
-        }));
-    }
+    // async add(user) {
+    //     return await global.poolConnection.query(sql.Insert({
+    //         table: 'user',
+    //         params: Object.assign({}, user)
+    //     }));
+    // }
+
+    // async getByName(name) {
+    //     return await global.poolConnection.query(sql.Select({
+    //         table: 'user',
+    //         params: {
+    //             username: name
+    //         }
+    //     }))[0];
+    // }
+
+    // async get(id) {
+    //     return await global.poolConnection.query(sql.Select({
+    //         table: 'user',
+    //         params: {
+    //             id
+    //         }
+    //     }));
+    // }
 
 }
 

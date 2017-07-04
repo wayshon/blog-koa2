@@ -4,10 +4,11 @@ crypto 是 Node.js 的一个核心模块，用它生成散列值来加密密码
 const fs = require('fs'),
       koaBody = require('koa-body'),
       path = require('path'),
-      ApiError = require('../error/ApiError');
+      ApiError = require('../error/ApiError'),
+      ApiErrorNames = require('../error/ApiErrorNames'),
+      config = require('../config'),
+      tool = require("../utils/tools");
 
-
-const config = require('../config');
 
 //获取局域网ip
 const os = require('os'),
@@ -29,64 +30,55 @@ class UtilsController {
     }
 
     async uploadBase64(ctx, next) {
-        try {
-            let dataBuffer = new Buffer(ctx.request.body.img, 'base64'),
-                userid = ctx.state.user || 'test',
-                name = ctx.request.body.imgName || Date.now(),
-                imgpath = `images/${userid}/${name}.png`,
-                absolutePath = `http://${iptable['en0:1']}:${config.port}/${imgpath}`;
+        let req = ctx.request.body;
 
-            if (!fs.existsSync(`./public/images/${userid}`)) {
-                fs.mkdirSync(`./public/images/${userid}`);
-            }
+        if (tool.isBlank(req.img)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 img');
+
+        let dataBuffer = new Buffer(req.img, 'base64'),
+            userid = ctx.state.user || 'test',
+            name = req.imgName || Date.now(),
+            imgpath = `images/${userid}/${name}.png`,
+            absolutePath = `http://${iptable['en0:1']}:${config.port}/${imgpath}`;
+
+        if (!fs.existsSync(`./public/images/${userid}`)) {
+            fs.mkdirSync(`./public/images/${userid}`);
+        }
             
-            let promiseFS = new Promise((resolve, reject) => {
-                fs.writeFile(`./public/${imgpath}`, dataBuffer, error => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        resolve();
-                    }
-                });
+        let promiseFS = new Promise((resolve, reject) => {
+            fs.writeFile(`./public/${imgpath}`, dataBuffer, error => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve();
+                }
             });
+        });
 
-            await promiseFS;
-            ctx.body = {
-                msg: '上传成功'
-            }
-
-        } catch (error) {
-            console.log(error)
-            if (error instanceof ApiError) 
-                throw error
-            else
-                throw new ApiError({code: -1, msg: '未知错误'});
+        await promiseFS;
+        ctx.body = {
+            url: absolutePath
         }
     }
 
     async upload(ctx, next) {
-        try {
-            let file = ctx.request.body.files.file;
 
-            let userid = ctx.state.user || 'test',
-                imgpath = `images/${userid}/${file.name}`,
-                absolutePath = `http://${iptable['en0:1']}:${config.port}/${imgpath}`;
+        let req = ctx.request.body;
 
-            let reader = fs.createReadStream(file.path),
-                stream = fs.createWriteStream(`./public/${imgpath}`);
+        if (tool.isBlank(req.files.file)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 file');
 
-            reader.pipe(stream);
+        let file = req.files.file;
 
-            ctx.body = {
-                url: `http://${iptable['en0:1']}:${config.port}/${imgpath}`
-            }
+        let userid = ctx.state.user || 'test',
+            imgpath = `images/${userid}/${file.name}`,
+            absolutePath = `http://${iptable['en0:1']}:${config.port}/${imgpath}`;
 
-        } catch (error) {
-            console.log(error)
-            if (error instanceof ApiError) 
-                throw error
-            else
-                throw new ApiError({code: -1, msg: '未知错误'});
+        let reader = fs.createReadStream(file.path),
+            stream = fs.createWriteStream(`./public/${imgpath}`);
+
+        reader.pipe(stream);
+
+        ctx.body = {
+            url: `http://${iptable['en0:1']}:${config.port}/${imgpath}`
         }
     }
 }
