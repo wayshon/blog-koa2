@@ -4,9 +4,9 @@ crypto 是 Node.js 的一个核心模块，用它生成散列值来加密密码
 const crypto = require('crypto'),
       ApiError = require('../error/ApiError'),
       ApiErrorNames = require('../error/ApiErrorNames');
-
-const jwt = require("jsonwebtoken"),
-      config = require("../config");
+      jwt = require("jsonwebtoken"),
+      config = require("../config"),
+      tool = require("../utils/tools");
 
 class UserController {
 
@@ -15,6 +15,11 @@ class UserController {
     }
 
     async regist(ctx, next) {
+        let req = ctx.request;
+
+        if (tool.isBlank(req.userName)) throw new ApiError(ApiErrorNames.USER_EXISTED)
+
+
         let md5 = crypto.createHash('md5'),
             name = ctx.request.body.name,
             nickname = ctx.request.body.nickname,

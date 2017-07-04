@@ -8,8 +8,8 @@ module.exports = {
     mysqlConfig: {
         user: 'root',
         database: 'blog',
-        host: '127.0.0.1',
-        password: '123456',
+        host: '115.159.55.33',
+        password: 'root',
         dbPort: 3306
     },
     jwtSecret: 'blog'
