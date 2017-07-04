@@ -12,8 +12,9 @@ module.exports = (regs) => {
   const mymid = async (ctx, next) => {
     if (!filterProtected(ctx.url)) return await next();
 
-    if (!ctx.header.authorization)
+    if (!ctx.header.authorization) {
       ctx.throw(401, 'UnauthorizedError');
+    }
           
     let decoded;
     try {
