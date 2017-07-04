@@ -16,7 +16,7 @@ function Select(opt) {
     } = opt;
     let targetStr = '';
     let paramsStr = '';
-    
+
     target instanceof Array ? target.forEach((item, index) => {
         targetStr += item;
         index < target.length - 1 && (targetStr += ',');
@@ -70,7 +70,7 @@ function Update(opt) {
         Object.keys(target).forEach((item, index) => {
             let value = target[item];
             targetStr += `${item} = '${value}'`;
-            index < Object.keys(params).length - 1 && (targetStr += ',');
+            index < Object.keys(target).length - 1 && (targetStr += ',');
         });
     }
 
