@@ -4,8 +4,7 @@ crypto 是 Node.js 的一个核心模块，用它生成散列值来加密密码
 const fs = require('fs'),
       koaBody = require('koa-body'),
       path = require('path'),
-      ApiError = require('../error/ApiError'),
-      ApiErrorNames = require('../error/ApiErrorNames');
+      ApiError = require('../error/ApiError');
 
 
 const config = require('../config');
@@ -61,7 +60,7 @@ class UtilsController {
             if (error instanceof ApiError) 
                 throw error
             else
-                throw new ApiError(ApiErrorNames.UNKNOW_ERROR);
+                throw new ApiError({code: -1, msg: '未知错误'});
         }
     }
 
@@ -87,7 +86,7 @@ class UtilsController {
             if (error instanceof ApiError) 
                 throw error
             else
-                throw new ApiError(ApiErrorNames.UNKNOW_ERROR);
+                throw new ApiError({code: -1, msg: '未知错误'});
         }
     }
 }

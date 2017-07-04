@@ -18,7 +18,14 @@ const mysql = require('promise-mysql'),
       pool = mysql.createPool($db.mysql);
 
 // error handler
-onerror(app)
+// onerror(app)
+//处理未捕获的错误
+app.use((ctx, next) => {
+  return next().catch((err) => {
+    ctx.status = 500;
+    ctx.body = 'server error'
+  });
+});
 
 //Support multipart, urlencoded and json request bodies. Provides same functionality as Express's bodyParser - multer
 app.use(koaBody({ multipart: true }));
@@ -70,14 +77,7 @@ app.use((ctx, next) => {
 // }))
 
 //添加格式化处理响应结果的中间件，在添加路由之前调用
-// app.use(responseFormatter('^/api'));
-
-// custom 404
-// app.use(async function(ctx, next) {
-//   await next();
-//   if (ctx.body || !ctx.idempotent) return;
-//   ctx.redirect('/404.html');
-// });
+app.use(responseFormatter('^/api'));
 
 // routes
 router.use('/api', api.routes(), api.allowedMethods());

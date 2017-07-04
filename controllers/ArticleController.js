@@ -1,5 +1,4 @@
-const ApiError = require('../error/ApiError'),
-    ApiErrorNames = require('../error/ApiErrorNames');
+const ApiError = require('../error/ApiError');
 
 class ArticleController {
     constructor(d) {
@@ -23,7 +22,7 @@ class ArticleController {
             if (error instanceof ApiError)
                 throw error
             else
-                throw new ApiError(ApiErrorNames.UNKNOW_ERROR);
+                throw new ApiError({code: -1, msg: '未知错误'});
         }
     }
 
@@ -40,7 +39,7 @@ class ArticleController {
             if (error instanceof ApiError)
                 throw error
             else
-                throw new ApiError(ApiErrorNames.UNKNOW_ERROR);
+                throw new ApiError({code: -1, msg: '未知错误'});
         }
     }
 
@@ -58,7 +57,7 @@ class ArticleController {
             if (error instanceof ApiError)
                 throw error
             else
-                throw new ApiError(ApiErrorNames.UNKNOW_ERROR);
+                throw new ApiError({code: -1, msg: '未知错误'});
         }
     }
 
@@ -79,7 +78,7 @@ class ArticleController {
             if (error instanceof ApiError)
                 throw error
             else
-                throw new ApiError(ApiErrorNames.UNKNOW_ERROR);
+                throw new ApiError({code: -1, msg: '未知错误'});
         }
     }
 
@@ -96,7 +95,7 @@ class ArticleController {
             if (error instanceof ApiError)
                 throw error
             else
-                throw new ApiError(ApiErrorNames.UNKNOW_ERROR);
+                throw new ApiError({code: -1, msg: '未知错误'});
         }
     }
 }

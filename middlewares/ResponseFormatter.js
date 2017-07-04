@@ -11,12 +11,14 @@ const responseFormatter = (ctx) => {
             message: 'success',
             data: ctx.body
         }
-    } else {
-        ctx.body = {
-            code: 0,
-            message: 'success'
-        }
     }
+    //这里不注释掉会没有404
+    // else {
+    //     ctx.body = {
+    //         code: 0,
+    //         message: 'success'
+    //     }
+    // }
 }
 
 const urlFilter = (pattern) => {
