@@ -7,7 +7,7 @@ const fs = require('fs'),
       ApiError = require('../error/ApiError'),
       ApiErrorNames = require('../error/ApiErrorNames'),
       config = require('../config'),
-      tool = require("../utils/tools");
+      tool = require("../utils/Tools");
 
 
 //获取局域网ip
