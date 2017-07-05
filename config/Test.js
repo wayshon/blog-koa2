@@ -10,7 +10,8 @@ module.exports = {
         database: 'blog',
         host: '127.0.0.1',
         password: 'root',
-        dbPort: 3306
+        dbPort: 3306,
+        connectionLimit: 10
     },
     jwtSecret: 'blog'
 }

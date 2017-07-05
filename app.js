@@ -16,6 +16,7 @@ const responseFormatter = require('./middlewares/ResponseFormatter');
 const jwtFilter = require("./middlewares/JwtFilter");
 
 const mysql = require('promise-mysql'),
+// const mysql = require('mysql'),
       $db = require('./config/db'),
       pool = mysql.createPool($db.mysql);
 
@@ -83,6 +84,11 @@ pool.getConnection().then((connection) => {
     throw err;
 });
 
+// pool.getConnection((error, connection) => {
+//     if (error) throw error;
+//     global.poolConnection = connection;
+// });
+
 //处理jwt 401 报错
 app.use((ctx, next) => {
   return next().catch((err) => {
@@ -96,7 +102,7 @@ app.use((ctx, next) => {
 });
 
 //jwt过滤, 第一个参数为需要验证的路径，不写就是全部验证。第二个参数是需要忽略的路径
-app.use(jwtFilter([/^\/api/]).unless({ path: [/\/login$/, /\/regist$/] }))
+// app.use(jwtFilter([/^\/api/]).unless({ path: [/\/login$/, /\/regist$/] }))
 // app.use(jwtFilter([/^\/api/]).unless(function(ctx) {
 //   if (ctx.request.method == 'OPTIONS' || [/\/login$/].some(reg => ctx.request.url.match(reg)) || (ctx.request.url.match(/\/users$/) && ctx.request.method == 'POST')) 
 //     return true;

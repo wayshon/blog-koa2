@@ -1,23 +1,23 @@
 // const sql = require('./Sql');
-const $sql = require('./UserSqlMapping');
+const $sql = require('./sqlmapping');
 
 class UserDao {
 
     async add(user) {
         let {userName,password,nickName,email,mobile,avatar,manager} = user;
-        return await global.poolConnection.query($sql.insert, [userName,password,nickName,email,mobile,avatar,manager]);
+        return await global.poolConnection.query($sql.user.insert, [userName,password,nickName,email,mobile,avatar,manager]);
     }
 
     async getByName(name) {
-        return await global.poolConnection.query($sql.queryByName, name);
+        return await global.poolConnection.query($sql.user.queryByName, name);
     }
 
     async get(id) {
-        return await global.poolConnection.query($sql.queryById, id);
+        return await global.poolConnection.query($sql.user.queryById, id);
     }
 
     async getAll() {
-        return await global.poolConnection.query($sql.queryAll);
+        return await global.poolConnection.query($sql.user.queryAll);
     }
 
     // async add(user) {
