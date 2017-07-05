@@ -63,6 +63,11 @@ class UserController {
             token: authToken
         }
     }
+
+    async getAll(ctx, next) {
+        let result = await this.dao.getAll();
+        ctx.body = result
+    }
 }
 
 

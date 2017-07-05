@@ -11,16 +11,16 @@ const fs = require('fs'),
 
 
 //获取局域网ip
-const os = require('os'),
-    iptable = {},
-    ifaces = os.networkInterfaces();
-for (let dev in ifaces) {
-    ifaces[dev].forEach((details, alias) => {
-        if (details.family == 'IPv4') {
-            iptable[dev + (alias ? ':' + alias : '')] = details.address;
-        }
-    });
-}
+// const os = require('os'),
+//     iptable = {},
+//     ifaces = os.networkInterfaces();
+// for (let dev in ifaces) {
+//     ifaces[dev].forEach((details, alias) => {
+//         if (details.family == 'IPv4') {
+//             iptable[dev + (alias ? ':' + alias : '')] = details.address;
+//         }
+//     });
+// }
 // console.log(iptable['en0:1']);
 
 class UtilsController {
@@ -37,8 +37,8 @@ class UtilsController {
         let dataBuffer = new Buffer(req.img, 'base64'),
             userid = ctx.state.user || 'test',
             name = req.imgName || Date.now(),
-            imgpath = `images/${userid}/${name}.png`,
-            absolutePath = `http://${iptable['en0:1']}:${config.port}/${imgpath}`;
+            imgpath = `images/${userid}/${name}.png`;
+            // absolutePath = `http://${iptable['en0:1']}:${config.port}/${imgpath}`;
 
         if (!fs.existsSync(`./public/images/${userid}`)) {
             fs.mkdirSync(`./public/images/${userid}`);
@@ -56,7 +56,7 @@ class UtilsController {
 
         await promiseFS;
         ctx.body = {
-            url: absolutePath
+            url: imgpath
         }
     }
 
@@ -69,8 +69,8 @@ class UtilsController {
         let file = req.files.file;
 
         let userid = ctx.state.user || 'test',
-            imgpath = `images/${userid}/${file.name}`,
-            absolutePath = `http://${iptable['en0:1']}:${config.port}/${imgpath}`;
+            imgpath = `images/${userid}/${file.name}`;
+            // absolutePath = `http://${iptable['en0:1']}:${config.port}/${imgpath}`;
 
         let reader = fs.createReadStream(file.path),
             stream = fs.createWriteStream(`./public/${imgpath}`);
@@ -78,7 +78,7 @@ class UtilsController {
         reader.pipe(stream);
 
         ctx.body = {
-            url: `http://${iptable['en0:1']}:${config.port}/${imgpath}`
+            url: imgpath
         }
     }
 }

@@ -16,6 +16,10 @@ class UserDao {
         return await global.poolConnection.query($sql.queryById, id);
     }
 
+    async getAll() {
+        return await global.poolConnection.query($sql.queryAll);
+    }
+
     // async add(user) {
     //     return await global.poolConnection.query(sql.Insert({
     //         table: 'user',
