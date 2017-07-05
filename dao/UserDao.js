@@ -1,5 +1,5 @@
 // const sql = require('./Sql');
-const $sql = require('./userSqlMapping');
+const $sql = require('./UserSqlMapping');
 
 class UserDao {
 
