@@ -6,6 +6,11 @@ class ArticleController {
         this.dao = d;
     }
 
+    async getAll(ctx, next) {
+        let result = await this.dao.getAll();
+        ctx.body = result
+    }
+
     async addArticle(ctx, next) {
         let req = ctx.request.body;
         try {
