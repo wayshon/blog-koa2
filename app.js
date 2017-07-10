@@ -89,8 +89,13 @@ pool.getConnection((err, connection) => {
     global.connection = new dbExec(connection);
   }
 });
+
 app.use(async (ctx, next) => {
-  global.connection ? next() : body = 'Server Init'
+  if (global.connection) {
+    await next()
+  } else {
+    body = 'Mysql Init Error'
+  }
 })
 
 // const achieveConnection = (pool) => {
@@ -117,32 +122,43 @@ app.use(async (ctx, next) => {
 //   await next();
 // })
 
-//处理jwt 401 报错
-app.use((ctx, next) => {
-  return next().catch((err) => {
-    if (err.status == 401) {
-      ctx.status = 401;
-      ctx.body = 'UnauthorizedError';
-    } else {
-      throw err;
-    }
-  });
-});
 
-//jwt过滤, 第一个参数为需要验证的路径，不写就是全部验证。第二个参数是需要忽略的路径
-app.use(jwtFilter([/^\/api/]).unless({ path: [/\/login$/, /\/regist$/, , /\/article$/] }))
-// app.use(jwtFilter([/^\/api/]).unless(function(ctx) {
-//   if (ctx.request.method == 'OPTIONS' || [/\/login$/].some(reg => ctx.request.url.match(reg)) || (ctx.request.url.match(/\/users$/) && ctx.request.method == 'POST')) 
-//     return true;
-//   return false;
-// }))
+const session = require("koa-session2");
+const redisStore = require("./config/RedisStore");
+
+app.use(session({
+  key: "sessionId",
+  store: new redisStore(),
+  maxAge: 1000 * 5,
+  // maxAge: 1000 * 60 * 60 * 24,
+  httpOnly: true
+}));
+
+// //处理jwt 401 报错
+// app.use((ctx, next) => {
+//   return next().catch((err) => {
+//     if (err.status == 401) {
+//       ctx.status = 401;
+//       ctx.body = 'UnauthorizedError';
+//     } else {
+//       throw err;
+//     }
+//   });
+// });
+
+// //jwt过滤, 第一个参数为需要验证的路径，不写就是全部验证。第二个参数是需要忽略的路径
+// app.use(jwtFilter([/^\/api/]).unless({ path: [/\/login$/, /\/regist$/, , /\/article$/] }))
+// // app.use(jwtFilter([/^\/api/]).unless(function(ctx) {
+// //   if (ctx.request.method == 'OPTIONS' || [/\/login$/].some(reg => ctx.request.url.match(reg)) || (ctx.request.url.match(/\/users$/) && ctx.request.method == 'POST')) 
+// //     return true;
+// //   return false;
+// // }))
 
 //添加格式化处理响应结果的中间件，在添加路由之前调用
 app.use(responseFormatter('^/api'));
 
 // routes
 router.use('/api', api.routes(), api.allowedMethods());
-
 app.use(router.routes(), router.allowedMethods());
 
 module.exports = app
