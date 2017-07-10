@@ -1,40 +1,28 @@
 // const sql = require('./Sql');
 const $sql = require('./sqlmapping');
 
-const transaction = (connection) => {
-    return new Promise(function(resolve, reject) {
-        connection.beginTransaction(err => {
-            if (err) {
-                console.log(err)
-                reject(err);
-            } else {
-                resolve();
-            }
-        })
-    });
-}
-
 class ArticleDao {
-    async add(article) {
-        let {userId,title,content,readCount} = article;
 
-        return await global.poolConnection.query($sql.article.insert, [userId,title,content,readCount]);
-    }
+    async get(currentPage, pageSize) {
+        console.log(1111111)
 
-    async getAll(currentPage, pageSize) {
+        // console.log(global.connection.beginTransaction() instanceof Promise)
+
+        await global.connection.beginTransaction();
+        console.log(2222222)
+        await global.connection.query('select * from user');
+        console.log(3333333)
+        let user1 = await global.connection.query($sql.user.insert, ['test1','123456','testway','1@q.cn', '15716199911', '', 1]);
+        console.log(4444444)
+        let user2 = await global.connection.query($sql.user.insert, ['test2','123456','testway2','2@q.cn', '15716199911', '', 2]);
+        console.log(5555555)
+        // let user2 = await global.connection.query($sql.user.insert, [1,2,3,4]);
+        let info = await global.connection.commit();
         console.log(6666666)
-
-        try {
-            await transaction(global.poolConnection.connection);
-            let result = await global.poolConnection.query('select * from user');
-            let info = await global.poolConnection.connection.commit;
-            console.log(info)
-            return result;
-        } catch(error) {
-            console.log('!!!!!!!')
-            console.log(error)
-        }
-        
+        // console.log('===================')
+        // console.log(info)
+        console.log(7777777)
+        return info;
     }
 
 

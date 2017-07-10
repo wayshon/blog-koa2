@@ -7,8 +7,23 @@ class ArticleController {
     }
 
     async getAll(ctx, next) {
-        let result = await this.dao.getAll();
-        ctx.body = result
+        console.log('aaaaaaaa')
+        try {
+            console.log('bbbbbbbb')
+            await this.dao.get();
+            console.log('ccccccccc')
+            ctx.body = {
+                hehe: 777777
+            }
+        } catch(e) {
+            console.log('ddddddd')
+            console.log('*********************')
+            // throw new ApiError(ApiErrorNames.UNKNOW_ERROR);
+            ctx.body = {
+                haha: 6666666
+            }
+        }
+        console.log('eeeeee')
     }
 
     async addArticle(ctx, next) {

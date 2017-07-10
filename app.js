@@ -15,15 +15,15 @@ const api = require('./routes/api');
 const responseFormatter = require('./middlewares/ResponseFormatter');
 const jwtFilter = require("./middlewares/JwtFilter");
 
-const mysql = require('promise-mysql'),
-      $db = require('./config/db'),
-      pool = mysql.createPool($db.mysql);
-
 const ApiError = require('./error/ApiError');
-
 // error handler
 // onerror(app)
 //处理未捕获的错误
+app.use(async (ctx, next) => {
+  console.log('[[[[[[[[[[[[')
+  await next();
+  console.log(']]]]]]]]]]]]')
+})
 app.use((ctx, next) => {
   return next().catch((err) => {
     console.log(err)
@@ -77,11 +77,45 @@ app.use(async (ctx, next) => {
   }
 });
 
-pool.getConnection().then((connection) => {
-    global.poolConnection = connection;
-}).catch((err) => {
-    throw err;
+const mysql = require('mysql'),
+      $db = require('./config/db'),
+      pool = mysql.createPool($db.mysql),
+      dbExec = require('./config/DBExec');
+
+pool.getConnection((err, connection) => {
+  if (err) {
+    throw err
+  } else {
+    global.connection = new dbExec(connection);
+  }
 });
+app.use(async (ctx, next) => {
+  global.connection ? next() : body = 'Server Init'
+})
+
+// const achieveConnection = (pool) => {
+//     return new Promise(function(resolve, reject) {
+//         pool.getConnection((err, connection) => {
+//           if (err) {
+//                 reject(err);
+//             } else {
+//                 resolve(connection);
+//             }
+//         });
+//     });
+// }
+// app.use(async (ctx, next) => {
+//   const connection = null;
+//   try {
+//     connection = await achieveConnection(pool)
+//   } catch(err) {
+//     console.log('-------------')
+//     console.log(err)
+//   }
+  
+//   global.connection = new dbExec(connection);
+//   await next();
+// })
 
 //处理jwt 401 报错
 app.use((ctx, next) => {
