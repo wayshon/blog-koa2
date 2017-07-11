@@ -22,4 +22,4 @@ build:
     - master
   script:
     - pm2 remove blog 
-    - pm2 start ./bin/www --name blog
+    - pm2 start ./bin/www --name="blog"
