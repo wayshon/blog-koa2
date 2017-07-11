@@ -13,12 +13,5 @@ module.exports = {
         dbPort: 3306,
         connectionLimit: 10
     },
-    jwtSecret: 'blog',
-    redisConfig: {
-        port: 6379,          // Redis port 
-        host: '127.0.0.1',   // Redis host 
-        family: 4,           // 4 (IPv4) or 6 (IPv6) 
-        password: '',
-        // db: 0
-    }
+    jwtSecret: 'blog'
 }
