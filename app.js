@@ -123,7 +123,7 @@ app.use(responseFormatter('^/api'));
 router.use('/api', api.routes(), api.allowedMethods());
 router.get('/', (ctx, next) => {
   ctx.body = {
-    msg: 66666666
+    msg: 77777777
   }
 })
 app.use(router.routes(), router.allowedMethods());
