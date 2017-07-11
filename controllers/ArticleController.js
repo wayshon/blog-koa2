@@ -39,7 +39,7 @@ class ArticleController {
         let pageSize = ctx.header['X-Page-Size'] || 10;
 
         try {
-            let result = await articleDao.getList1(currentPage, pageSize);
+            let result = await articleDao.getList(currentPage, pageSize);
             ctx.body = result;
         } catch(error) {
             // console.log(error)
