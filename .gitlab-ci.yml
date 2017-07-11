@@ -1,0 +1,26 @@
+stages:
+  - install
+  - deploy
+
+cache:
+  key: ${CI_BUILD_REF_NAME}
+  paths:
+    - node_modules/
+
+
+install:
+  stage: install
+  only:
+    - master
+  script:
+    - npm install pm2 -g
+    - npm install
+
+
+build:
+  stage: deploy
+  only:
+    - master
+  script:
+    - pm2 remove blog 
+    - pm2 start ./bin/www --name blog
