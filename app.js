@@ -121,6 +121,11 @@ app.use(responseFormatter('^/api'));
 
 // routes
 router.use('/api', api.routes(), api.allowedMethods());
+router.get('/', (ctx, next) => {
+  ctx.body = {
+    msg: 66666666
+  }
+})
 app.use(router.routes(), router.allowedMethods());
 
 module.exports = app
