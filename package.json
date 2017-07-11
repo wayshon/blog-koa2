@@ -6,7 +6,9 @@
     "start": "node bin/www",
     "dev": "NODE_ENV=development ./node_modules/.bin/nodemon bin/www",
     "prd": "pm2 start bin/www",
-    "test": "NODE_ENV=test echo \"Error: no test specified\" && exit 1"
+    "test": "NODE_ENV=test echo \"Error: no test specified\" && exit 1",
+    "pm2": "./node_modules/pm2/bin/pm2 start ./bin/www --name='blog'",
+    "stop": ""
   },
   "dependencies": {
     "debug": "^2.6.3",
@@ -26,6 +28,7 @@
     "koa-views": "^5.2.1",
     "log4js": "^1.1.1",
     "mysql": "^2.13.0",
+    "pm2": "^2.5.0",
     "promise-mysql": "^3.0.1",
     "pug": "^2.0.0-rc.1"
   },
