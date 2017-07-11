@@ -21,6 +21,5 @@ build:
   only:
     - master
   script:
-    # - pm2 remove blog 
-    # - pm2 start ./bin/www --name="blog"
-    - npm start
+    - pm2 delete blog 
+    - pm2 start ./bin/www --name="blog"
