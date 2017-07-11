@@ -21,5 +21,5 @@ build:
   only:
     - master
   script:
-    - chmod -x ./start.sh
+    - chmod +x ./start.sh
     - ./start.sh
