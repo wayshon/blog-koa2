@@ -10,6 +10,7 @@ const logUtil = require('./utils/LogUtil');
 const koaBody = require('koa-body');
 
 const router = require('koa-router')();
+const rou = require('./routes');
 const api = require('./routes/api');
 
 const responseFormatter = require('./middlewares/ResponseFormatter');
@@ -120,12 +121,8 @@ app.use(jwtFilter([/^\/api/]).unless({ path: [/\/login$/, /\/regist$/, , /\/arti
 app.use(responseFormatter('^/api'));
 
 // routes
+router.use('/', rou.routes(), rou.allowedMethods());
 router.use('/api', api.routes(), api.allowedMethods());
-router.get('/', (ctx, next) => {
-  ctx.body = {
-    msg: 77777777
-  }
-})
 app.use(router.routes(), router.allowedMethods());
 
 module.exports = app
