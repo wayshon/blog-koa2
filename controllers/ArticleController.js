@@ -1,116 +1,51 @@
 const ApiError = require('../error/ApiError'),
-      ApiErrorNames = require('../error/ApiErrorNames');
+      ApiErrorNames = require('../error/ApiErrorNames'),
+      articleDao = require("../dao/ArticleDao");
 
 class ArticleController {
-    constructor(d) {
-        this.dao = d;
-    }
 
-    async getAll(ctx, next) {
-        try {
-            await this.dao.get();
-            ctx.body = {
-                msg: 'ok'
-            }
-        } catch(e) {
-            console.log(e)
-            throw new ApiError(ApiErrorNames.UNKNOW_ERROR);
+    async add(ctx, next) {
+        ctx.body={
+            msg: 'add'
         }
     }
 
-    async addArticle(ctx, next) {
-        let req = ctx.request.body;
-        try {
-            await this.dao.add({
-                title: req.title,
-                content: req.content,
-                user_id: req.user_id
-            });
-            ctx.body = {
-                result: 'add success!',
-                errcode: 0,
-            };
-        } catch (e) {
-            console.log(error);
-            if (error instanceof ApiError)
-                throw error
-            else
-                throw new ApiError(ApiErrorNames.UNKNOW_ERROR);
+    async remove(ctx, next) {
+        ctx.body={
+            msg: 'remove'
         }
     }
 
-    async getArticleList(ctx, next) {
-        try {
-            let articleLit = await this.dao.getTitleList();
-            articleLit.forEach(i => i.content = i.content.slice(0, 100));
-            ctx.body = {
-                data: articleLit,
-                errcode: 0,
-            };
-        } catch (e) {
-            console.log(error);
-            if (error instanceof ApiError)
-                throw error
-            else
-                throw new ApiError(ApiErrorNames.UNKNOW_ERROR);
+    async modify(ctx, next) {
+        ctx.body={
+            msg: 'modify'
         }
     }
 
-    async getArticleDetail(ctx, next) {
-        try {
-            let result = await this.dao.getDetail({
-                id: ctx.params.id
-            });
-            ctx.body = {
-                data: result[0],
-                errcode: 0,
-            };
-        } catch (e) {
-            console.log(error);
-            if (error instanceof ApiError)
-                throw error
-            else
-                throw new ApiError(ApiErrorNames.UNKNOW_ERROR);
+    async getById(ctx, next) {
+        ctx.body={
+            msg: 'getById'
         }
     }
 
-    async updateArticle(ctx, next) {
-        try {
-            let req = ctx.request.body;
-            let article = {};
-            req.title && (article['title'] = req.title);
-            req.content && (article['content'] = req.content);
-            let result = await this.dao.editById(article, ctx.params.id);
-            console.log(result);
-            ctx.body = {
-                result: 'update success!',
-                errcode: 0,
-            };
-        } catch (e) {
-            console.log(error);
-            if (error instanceof ApiError)
-                throw error
-            else
-                throw new ApiError(ApiErrorNames.UNKNOW_ERROR);
+    async getListByUserId(ctx, next) {
+        ctx.body={
+            msg: 'getListByUserId'
         }
     }
 
-    async deleteArticle(ctx, next) {
+    async getList(ctx, next) {
+        let currentPage = ctx.header['X-Current-Page'] || 1;
+        let pageSize = ctx.header['X-Page-Size'] || 10;
+
         try {
-            let result = await this.dao.deletById(ctx.params.id);
-            console.log(result);
-            ctx.body = {
-                result: 'delete success!',
-                errcode: 0,
-            };
-        } catch (e) {
-            console.log(error);
-            if (error instanceof ApiError)
-                throw error
-            else
-                throw new ApiError(ApiErrorNames.UNKNOW_ERROR);
+            let result = await articleDao.getList1(currentPage, pageSize);
+            ctx.body = result;
+        } catch(error) {
+            // console.log(error)
+            throw error
         }
     }
 }
 
-module.exports = ArticleController;
+module.exports = new ArticleController();

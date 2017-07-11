@@ -1,10 +1,21 @@
 const router = require('koa-router')();
-const { articleController } = require('../../controllers');
+const articleController = require('../../controllers/ArticleController');
 
-router.get('/', (ctx, next) => articleController.getAll(ctx, next));
-router.get('/:id', (ctx, next) => articleController.getArticleDetail(ctx, next));
-router.post('/:id', (ctx, next) => articleController.updateArticle(ctx, next));
-router.delete('/:id', (ctx, next) => articleController.deleteArticle(ctx, next));
-router.post('/', (ctx, next) => articleController.addArticle(ctx, next));
+const filterApiAuth = require('../../middlewares/FilterApiAuth')
+
+router.post('/', filterApiAuth);
+router.post('/', articleController.add);
+
+router.delete('/:id', filterApiAuth);
+router.delete('/:id', articleController.remove);
+
+router.put('/:id', filterApiAuth);
+router.put('/:id', articleController.modify);
+
+router.get('/:id', articleController.getById);
+
+router.get('/', articleController.getList);
+
+
 
 module.exports = router;

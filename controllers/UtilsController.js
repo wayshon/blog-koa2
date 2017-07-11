@@ -25,10 +25,6 @@ const fs = require('fs'),
 
 class UtilsController {
 
-    constructor(d) {
-        
-    }
-
     async uploadBase64(ctx, next) {
         let req = ctx.request.body;
 
@@ -84,4 +80,4 @@ class UtilsController {
 }
 
 
-module.exports = UtilsController;
+module.exports = new UtilsController();

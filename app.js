@@ -17,18 +17,22 @@ const responseFormatter = require('./middlewares/ResponseFormatter');
 const jwtFilter = require("./middlewares/JwtFilter");
 
 const ApiError = require('./error/ApiError');
+
+app.use(async (ctx, next) => {
+  await next();
+  if (ctx.body || !ctx.idempotent) return;
+  ctx.status = 404;
+  ctx.body = 'Not Found'
+})
 // error handler
 // onerror(app)
 //处理未捕获的错误
-app.use(async (ctx, next) => {
-  await next();
-})
 app.use((ctx, next) => {
   return next().catch((err) => {
     console.log(err)
     if(!(err instanceof ApiError)) {
       ctx.status = 500;
-      ctx.body = 'server error'
+      ctx.body = 'Server Error'
     }
   });
 });
@@ -45,7 +49,7 @@ app.use(json())
 app.use(require('koa-static')(__dirname + '/public'))
 
 app.use(views(__dirname + '/views', {
-  extension: 'pug'
+  extension: 'ejs'
 }))
 
 // logger
@@ -110,7 +114,7 @@ app.use((ctx, next) => {
 });
 
 //jwt过滤, 第一个参数为需要验证的路径，不写就是全部验证。第二个参数是需要忽略的路径
-app.use(jwtFilter([/^\/api/]).unless({ path: [/\/login$/, /\/regist$/, , /\/article$/] }))
+// app.use(jwtFilter([/^\/api/]).unless({ path: [/\/login$/, /\/regist$/, , /\/article$/] }))
 // app.use(jwtFilter([/^\/api/]).unless(function(ctx) {
 //   if (ctx.request.method == 'OPTIONS' || [/\/login$/].some(reg => ctx.request.url.match(reg)) || (ctx.request.url.match(/\/users$/) && ctx.request.method == 'POST')) 
 //     return true;

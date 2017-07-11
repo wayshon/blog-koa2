@@ -6,13 +6,10 @@ const crypto = require('crypto'),
       jwt = require("jsonwebtoken"),
       config = require("../config"),
       tool = require("../utils/Tools"),
-      ApiErrorNames = require('../error/ApiErrorNames');
+      ApiErrorNames = require('../error/ApiErrorNames'),
+      uesrDao = require("../dao/UserDao");
 
 class UserController {
-
-    constructor(d) {
-        this.dao = d;
-    }
 
     async regist(ctx, next) {
         let req = ctx.request.body;
@@ -33,9 +30,9 @@ class UserController {
             avatar = req.avatar || '',
             manager = req.manager;
             
-        let checkUsers = await this.dao.getByName(userName);
+        let checkUsers = await uesrDao.getByName(userName);
         if (checkUsers.length > 0) throw new ApiError(ApiErrorNames.USER_EXISTED);
-        let result = await this.dao.add({userName,password,nickName,email,mobile,avatar,manager});
+        let result = await uesrDao.add({userName,password,nickName,email,mobile,avatar,manager});
 
         ctx.body = {}
     }
@@ -50,7 +47,7 @@ class UserController {
             md5 = crypto.createHash('md5'),
             password = md5.update(req.password).digest('hex');
         
-        let result = await this.dao.getByName(userName);
+        let result = await uesrDao.getByName(userName);
         if (result.length == 0) throw new ApiError(ApiErrorNames.USER_NOT_EXIST);
         if (result[0].password != password) throw new ApiError(ApiErrorNames.PASSWORD_ERROR);
             
@@ -64,11 +61,20 @@ class UserController {
         }
     }
 
-    async getAll(ctx, next) {
-        let result = await this.dao.getAll();
-        ctx.body = result
+    async getUserId(ctx, next) {
+        let userId = ctx.params.id;
+        if (tool.isBlank(userId)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 userId');
+
+        try {
+            let result = await uesrDao.get(userId);
+            ctx.body = result[0]
+        } catch(e) {
+            console.log(e)
+            throw e
+        }
+        
     }
 }
 
 
-module.exports = UserController;
+module.exports = new UserController();
