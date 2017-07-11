@@ -5,7 +5,7 @@ const crypto = require('crypto'),
       ApiError = require('../error/ApiError'),
       jwt = require("jsonwebtoken"),
       config = require("../config"),
-      tool = require("../utils/tools"),
+      tool = require("../utils/Tools"),
       ApiErrorNames = require('../error/ApiErrorNames');
 
 class UserController {

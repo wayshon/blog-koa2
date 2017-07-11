@@ -15,15 +15,13 @@ const api = require('./routes/api');
 const responseFormatter = require('./middlewares/ResponseFormatter');
 const jwtFilter = require("./middlewares/JwtFilter");
 
-const mysql = require('promise-mysql'),
-      $db = require('./config/db'),
-      pool = mysql.createPool($db.mysql);
-
 const ApiError = require('./error/ApiError');
-
 // error handler
 // onerror(app)
 //处理未捕获的错误
+app.use(async (ctx, next) => {
+  await next();
+})
 app.use((ctx, next) => {
   return next().catch((err) => {
     console.log(err)
@@ -77,11 +75,26 @@ app.use(async (ctx, next) => {
   }
 });
 
-pool.getConnection().then((connection) => {
-    global.poolConnection = connection;
-}).catch((err) => {
-    throw err;
+const mysql = require('mysql'),
+      $db = require('./config/db'),
+      pool = mysql.createPool($db.mysql),
+      dbExec = require('./config/DBExec');
+
+pool.getConnection((err, connection) => {
+  if (err) {
+    throw err
+  } else {
+    global.connection = new dbExec(connection);
+  }
 });
+
+app.use(async (ctx, next) => {
+  if (global.connection) {
+    await next()
+  } else {
+    body = 'Mysql Init Error'
+  }
+})
 
 //处理jwt 401 报错
 app.use((ctx, next) => {
@@ -96,7 +109,7 @@ app.use((ctx, next) => {
 });
 
 //jwt过滤, 第一个参数为需要验证的路径，不写就是全部验证。第二个参数是需要忽略的路径
-app.use(jwtFilter([/^\/api/]).unless({ path: [/\/login$/, /\/regist$/] }))
+app.use(jwtFilter([/^\/api/]).unless({ path: [/\/login$/, /\/regist$/, , /\/article$/] }))
 // app.use(jwtFilter([/^\/api/]).unless(function(ctx) {
 //   if (ctx.request.method == 'OPTIONS' || [/\/login$/].some(reg => ctx.request.url.match(reg)) || (ctx.request.url.match(/\/users$/) && ctx.request.method == 'POST')) 
 //     return true;
@@ -108,7 +121,6 @@ app.use(responseFormatter('^/api'));
 
 // routes
 router.use('/api', api.routes(), api.allowedMethods());
-
 app.use(router.routes(), router.allowedMethods());
 
 module.exports = app

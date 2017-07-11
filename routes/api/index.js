@@ -4,8 +4,8 @@ const articleRouter = require('./Article');
 const controller = require('../../controllers');
 const {utilsController} = controller;
 
-router.use('/users', userRouter.routes(), userRouter.allowedMethods());
-router.use('/articles', articleRouter.routes(), articleRouter.allowedMethods());
+router.use('/user', userRouter.routes(), userRouter.allowedMethods());
+router.use('/article', articleRouter.routes(), articleRouter.allowedMethods());
 
 
 router.post('/uploadbase64', (ctx, next) => utilsController.uploadBase64(ctx, next));

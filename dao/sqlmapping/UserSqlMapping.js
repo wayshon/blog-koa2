@@ -1,6 +1,6 @@
-// dao/userSqlMapping.js
+// dao/UserSqlMapping.js
 // CRUD SQL语句
-var user = {
+const user = {
     insert:'INSERT INTO user(id, username, password, nick_name, email, mobile, avatar, manager) VALUES(0,?,?,?,?,?,?,?)',
     queryById: 'select * from user where id=?',
     queryByName: 'select * from user where username=?',

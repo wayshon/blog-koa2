@@ -6,6 +6,18 @@ class ArticleController {
         this.dao = d;
     }
 
+    async getAll(ctx, next) {
+        try {
+            await this.dao.get();
+            ctx.body = {
+                msg: 'ok'
+            }
+        } catch(e) {
+            console.log(e)
+            throw new ApiError(ApiErrorNames.UNKNOW_ERROR);
+        }
+    }
+
     async addArticle(ctx, next) {
         let req = ctx.request.body;
         try {
