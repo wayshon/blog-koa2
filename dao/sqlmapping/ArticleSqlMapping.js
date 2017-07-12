@@ -7,8 +7,10 @@ const article = {
     queryAll: 'select * from article_view limit ?, ?',
     queryById: 'select * from article_view where id=?',
     queryByTitle: 'select * from article_view where title like "%"?"%" limit ?, ?',
-    queryByUserid: 'select * from article_view where userid=? limit ?, ?',
-    queryByTag: 'select * from article_view where id in (select article_id from tag where name=?) limit ?, ?'
+    queryByUserid: 'select * from article_view where user_id=? limit ?, ?',
+    queryByTag: 'select * from article_view where id in (select article_id from tag where name=?) limit ?, ?',
+    queryReadCount: 'select read_count from article where id=?',
+    updateReadCount: 'update article set read_count=? where id=?'
 };
 
 module.exports = article;

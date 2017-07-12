@@ -7,14 +7,15 @@ class DBExec {
     }
 
    async beginTransaction() {
-    return new Promise((resolve,reject)=>{
-        setTimeout(()=> {
-            console.log("hah")
-            resolve()
-        }, 5000)
-    })
-        
-        // return new Promise(async (resolve, reject)=> connection.beginTransaction(err => err ? reject(err) : resolve()));
+       return new Promise(function(resolve, reject) {
+            connection.beginTransaction(err => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            })
+        });
     }
     commit() {
         return new Promise(function(resolve, reject) {
@@ -34,6 +35,17 @@ class DBExec {
                     reject(err);
                 } else {
                     resolve(result);
+                }
+            });
+        });
+    }
+    rollback() {
+        return new Promise(function(resolve, reject) {
+            connection.rollback(err => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
                 }
             });
         });

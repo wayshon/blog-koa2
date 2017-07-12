@@ -6,8 +6,8 @@ const filterApiAuth = require('../../middlewares/FilterApiAuth')
 router.post('/', filterApiAuth);
 router.post('/', praiseController.add);
 
-router.delete('/:id', filterApiAuth);
-router.delete('/:id', praiseController.remove);
+router.delete('/', filterApiAuth);
+router.delete('/', praiseController.remove);
 
 router.get('/', praiseController.getList);
 

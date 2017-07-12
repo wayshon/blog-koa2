@@ -14,17 +14,17 @@ class UserController {
     async regist(ctx, next) {
         let req = ctx.request.body;
 
-        if (tool.isBlank(req.userName)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 userName');
+        if (tool.isBlank(req.user_name)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 user_name');
         if (tool.isBlank(req.password)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 password');
-        if (tool.isBlank(req.nickName)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 nickName');
+        if (tool.isBlank(req.nick_name)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 nick_name');
         if (tool.isBlank(req.email)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 email');
         if (tool.isBlank(req.mobile)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 mobile');
         if (tool.isBlank(req.manager)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 manager');
 
-        let userName = req.userName,
+        let userName = req.user_name,
             md5 = crypto.createHash('md5'),
             password = md5.update(req.password).digest('hex'),
-            nickName = req.nickName,
+            nickName = req.nick_name,
             email = req.email,
             mobile = req.mobile,
             avatar = req.avatar || '',
@@ -40,10 +40,10 @@ class UserController {
     async login(ctx, next) {
         let req = ctx.request.body;
 
-        if (tool.isBlank(req.userName)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 userName');
+        if (tool.isBlank(req.user_name)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 user_name');
         if (tool.isBlank(req.password)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 password');
 
-        let userName = req.userName,
+        let userName = req.user_name,
             md5 = crypto.createHash('md5'),
             password = md5.update(req.password).digest('hex');
         
@@ -65,13 +65,8 @@ class UserController {
         let userId = ctx.params.id;
         if (tool.isBlank(userId)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 userId');
 
-        try {
-            let result = await uesrDao.get(userId);
-            ctx.body = result[0]
-        } catch(e) {
-            console.log(e)
-            throw e
-        }
+        let result = await uesrDao.get(userId);
+        ctx.body = result[0]
         
     }
 }
