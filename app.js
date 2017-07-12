@@ -18,6 +18,9 @@ const jwtFilter = require("./middlewares/JwtFilter");
 
 const ApiError = require('./error/ApiError');
 
+const Raven = require('raven');
+Raven.config('http://125b0b09eff94f69b2ea8f47488e675d:bccbdeef6b17490a81d23c81716ee991@106.14.40.56:9000/4').install();
+
 app.use(async (ctx, next) => {
   await next();
   if (ctx.body || !ctx.idempotent) return;
@@ -30,6 +33,11 @@ app.use(async (ctx, next) => {
 app.use((ctx, next) => {
   return next().catch((err) => {
     console.log(err)
+    
+    Raven.captureException(err, function (err, eventId) {
+        console.log('Reported error ' + eventId);
+    });
+
     if(!(err instanceof ApiError)) {
       ctx.status = 500;
       ctx.body = 'Server Error'
