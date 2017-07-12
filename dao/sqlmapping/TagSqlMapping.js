@@ -5,7 +5,7 @@ const tag = {
     queryAll: 'select * from tag limit ?, ?',
     queryByArticleId: 'select * from tag where article_id=?',
     remove: 'delete from tag where article_id=? and name=?',
-    removeByArticleId: 'delete from tag where article_id=?',
+    removeByArticleId: 'delete from tag where article_id=? and user_id=?',
 };
 
 module.exports = tag;

@@ -13,8 +13,8 @@ class CommentDao {
         return comment[0]
     }
 
-    async remove(id) {
-        return await global.connection.query($sql.comment.remove, id);
+    async remove(id, userId) {
+        return await global.connection.query($sql.comment.remove, [id, userId]);
     }
 
     async getList(articleId, page, pageSize) {

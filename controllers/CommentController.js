@@ -25,9 +25,10 @@ class CommentController {
     }
 
     async remove(ctx, next) {
+        let userId = ctx.state.user;
         let id = ctx.params.id;
 
-        await commentDao.remove(id);
+        await commentDao.remove(id, userId);
 
         ctx.status = 204;
         ctx.body = 'No Content'

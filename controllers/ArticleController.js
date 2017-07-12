@@ -29,9 +29,10 @@ class ArticleController {
     }
 
     async remove(ctx, next) {
+        let userId = ctx.state.user;
         let articleId = ctx.params.id;
 
-        await articleDao.remove(articleId);
+        await articleDao.remove(userId, articleId);
 
         ctx.status = 204;
         ctx.body = 'No Content'

@@ -20,12 +20,12 @@ class ArticleDao {
         return articleResult.insertId;
     }
 
-    async remove(id) {
+    async remove(articleId, userId) {
         await global.connection.beginTransaction();
-        await global.connection.query($sql.article.remove, id);
-        await global.connection.query($sql.comment.removeByArticleId, id);
-        await global.connection.query($sql.tag.removeByArticleId, id);
-        await global.connection.query($sql.praise.removeByArticleId, id);
+        await global.connection.query($sql.article.remove, [articleId, userId]);
+        await global.connection.query($sql.comment.removeByArticleId, [articleId, userId]);
+        await global.connection.query($sql.tag.removeByArticleId, [articleId, userId]);
+        await global.connection.query($sql.praise.remove, [articleId, userId]);
         return await global.connection.commit().catch(e => global.connection.rollback);
     }
 
