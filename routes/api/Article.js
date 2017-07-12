@@ -16,6 +16,9 @@ router.get('/:id', articleController.getById);
 
 router.get('/', articleController.getList);
 
+//接口需重新规范
+router.post('/tag', articleController.getByTags);
+
 
 
 module.exports = router;

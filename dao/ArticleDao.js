@@ -56,9 +56,63 @@ class ArticleDao {
         return list;
     }
 
-    async getList(page, pageSize) {
+    async getList(title, page, pageSize) {
         await global.connection.beginTransaction();
-        let list = await global.connection.query($sql.article.queryAll, [page, pageSize]);
+        let list = await global.connection.query($sql.article.queryAll, [title, page, pageSize]);
+        for (let val of list) {
+            let tagList = await global.connection.query($sql.tag.queryByArticleId, val.id);
+            val.tags = tagList.map(v => v.name)
+        }
+        await global.connection.commit().catch(e => global.connection.rollback);
+        return list;
+    }
+
+    async getByTags(tags, page, pageSize) {
+        await global.connection.beginTransaction();
+
+        let sql = null;
+        
+        if (tags.length > 1) {
+            let tableList = [];
+            let tableSqls = tags.map((tag, index) => {
+                let tableSql = `(
+                    SELECT
+                        article_id
+                    FROM
+                        tag
+                    WHERE
+                        name = '${tag}'
+                ) AS table${index}`
+
+                tableList.push(`table${index}`)
+
+                return tableSql;
+            });
+
+            let tableSqlStr = tableSqls.join();
+            
+            let whereList = [];
+
+            for (let i = 0; i < tableList.length - 1; i++) {
+                let table1 = tableList[i];
+                let table2 = tableList[i + 1];
+                let str = `${table1}.article_id = ${table2}.article_id`;
+                whereList.push(str);
+            }
+
+            let whereStr = whereList.join(' and ');
+
+            sql = `SELECT * FROM article_view WHERE id IN (
+                SELECT ${tableList[0]}.article_id 
+                FROM ${tableSqlStr}
+                WHERE ${whereStr})
+                ORDER BY id
+                LIMIT ${page},${pageSize};`;
+        } else {
+            sql = `select * from article_view where id in (select article_id from tag where name='${tags[0]}') limit ${page},${pageSize};`
+        }
+
+        let list = await global.connection.query(sql);
         for (let val of list) {
             let tagList = await global.connection.query($sql.tag.queryByArticleId, val.id);
             val.tags = tagList.map(v => v.name)
