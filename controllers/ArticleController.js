@@ -77,31 +77,14 @@ class ArticleController {
     }
 
     async getList(ctx, next) {
-        // let currentPage = ctx.header['x-current-page'] ? +ctx.header['x-current-page'] : 1;
-        // let pageSize = ctx.header['x-page-size'] ? +ctx.header['x-page-size'] : 10;
-        // let page = (currentPage - 1) * pageSize;
+        let currentPage = ctx.header['x-current-page'] ? +ctx.header['x-current-page'] : 1;
+        let pageSize = ctx.header['x-page-size'] ? +ctx.header['x-page-size'] : 10;
+        let page = (currentPage - 1) * pageSize;
 
-        // let title = ctx.query.title || '';
+        let title = ctx.query.title || '';
 
-        // let result = await articleDao.getList(title, page, pageSize);
-        // ctx.body = result;
-
-        ctx.body = [
-            {
-                "id":"xxxxxxxxxxxxxxxx",
-                "user_id":"xxxxxxxxxxxxxxxx",
-                "nick_name":"xxxxxxxxxxxxxxxx",
-                "title":"ttttt",
-                "content":"xxxxxxxxxxxxxxxx",
-                "tags":[],
-                "reprint_count":10,
-                "read_count":10,
-                "comment_count":10,
-                "praise_count":10,
-                "create_at": "",
-                "update_at": ""
-            }
-        ]
+        let result = await articleDao.getList(title, page, pageSize);
+        ctx.body = result;
     }
 
     async getByTags(ctx, next) {

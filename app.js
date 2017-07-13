@@ -19,7 +19,7 @@ const jwtFilter = require("./middlewares/JwtFilter");
 const ApiError = require('./error/ApiError');
 
 const Raven = require('raven');
-Raven.config('http://125b0b09eff94f69b2ea8f47488e675d:bccbdeef6b17490a81d23c81716ee991@106.14.40.56:9000/4').install();
+Raven.config('http://8670ee1183b54337a53cb8bc7cd15eae:72324620852c4bc691795d0ffccc83cb@106.14.40.56:9000/3').install();
 
 app.use(async (ctx, next) => {
   await next();
