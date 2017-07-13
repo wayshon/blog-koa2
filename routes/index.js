@@ -1,6 +1,6 @@
 const router = require('koa-router')();
 
-router.get('/', (ctx, next) => {
+router.get('/', async (ctx, next) => {
   await ctx.render('what-eat')
 })
 
