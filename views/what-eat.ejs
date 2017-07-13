@@ -1,0 +1,122 @@
+<!DOCTYPE HTML>
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<head></head>
+<style>
+    #main {
+        display: flex;
+    }
+    #content {
+        
+    }
+    #result {
+        
+    }
+</style>
+<body>
+    <div id="main">
+        <div><button onclick="restart()">开始</button></div>
+        <div><button onclick="stop()">停止</button></div>
+        <div id="content"></div>
+        <h1 id="result"></h1>
+    </div>
+<script>
+
+    // let list = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
+    let list = ['兜约','萨利亚','东北','麦当劳','晋家门','火锅','国兰','望湘园','花椒鱼','肉夹馍','串串','日料','外卖'];
+
+    list.sort(function(){ return 0.5 - Math.random() })
+
+    let content = document.getElementById("content");
+
+    let result = document.getElementById("result");
+
+    let canvas = document.createElement("canvas");
+    canvas.height = canvas.width = 800;
+    content.appendChild(canvas);
+
+    let ctx = canvas.getContext("2d");
+
+    let [pointX, pointY, r] = [400, 400, 300];
+
+    let runInterval = Math.ceil(200 / list.length);
+
+    let rotate, num, angle, time, interval, runTime, isRun;
+
+    function restart() {
+         rotate = 0;
+         num = list.length;
+         angle = 2 * Math.PI / num;
+
+         time = 1;
+         interval = 1;
+        //  runTime = 1500;
+         isRun = true;
+
+        start();
+    }
+
+    function stop() {
+        isRun = false;
+    }
+    
+
+    function start() {
+        rotate++;
+        if (rotate == num) rotate = 0;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        ctx.lineWidth = 10;
+
+        ctx.beginPath();
+        ctx.arc(pointX, pointY, 5, 0, 2 * Math.PI, true);
+        ctx.fillStyle = "black";
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(pointX, pointY, r, 0, 2 * Math.PI, true);
+
+        for (i = 0; i < num; i++) {
+            let rac = angle * i;
+            let tempR = r - 15;
+            ctx.moveTo(pointX + r * Math.sin(rac), pointY - r * Math.cos(rac));
+            ctx.lineTo(pointX + tempR * Math.sin(rac), pointY - tempR * Math.cos(rac));
+            ctx.font="20px Georgia";
+            ctx.fillText(list[i],pointX + tempR * Math.sin(rac) - 10, pointY - tempR * Math.cos(rac) + 15);
+        }
+
+        ctx.stroke();
+
+        let rotateAngle = rotate * angle;
+
+        let sr = 230;
+
+        ctx.beginPath();
+        ctx.lineWidth = 10;
+        ctx.moveTo(400, 400);
+        ctx.lineTo(400 + sr * Math.sin(rotateAngle), 400 - sr * Math.cos(rotateAngle))
+        ctx.stroke();
+
+        result.innerHTML =list[rotate];
+
+        // setTimeout(function() {
+        //     isRun = false;
+        // }, runTime);
+
+        if (isRun) {
+            setTimeout(start,runInterval);
+        } else {
+            interval++;
+            time += interval;
+            if (time < 550) setTimeout(start,time);
+        }
+
+        // setTimeout(start,time);
+    }
+    
+
+</script>
+</body>
+</html>
