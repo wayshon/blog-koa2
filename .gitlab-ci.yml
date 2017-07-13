@@ -22,4 +22,5 @@ build:
     - master
   script:
     - npm run stop
+    - npm run move
     - npm run pm2

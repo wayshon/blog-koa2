@@ -8,7 +8,8 @@
     "prd": "pm2 start bin/www",
     "test": "NODE_ENV=test echo \"Error: no test specified\" && exit 1",
     "pm2": "./node_modules/pm2/bin/pm2 start ./bin/www --name='blog'",
-    "stop": "ps -ef|grep pm2|grep -v grep|cut -c 9-15|xargs kill -9"
+    "stop": "ps -ef|grep pm2|grep -v grep|cut -c 9-15|xargs kill -9",
+    "move": "rm -rf /var/kfc/blog-node && cp -r . /var/kfc/blog-node"
   },
   "dependencies": {
     "debug": "^2.6.3",
