@@ -1,8 +1,7 @@
 const router = require('koa-router')();
 
 router.get('/', (ctx, next) => {
-  let a = ''
-  a.big().charAt()
+  throw new Error(500, 'hahaha')
   ctx.body = {
     msg: '哦'
   }
