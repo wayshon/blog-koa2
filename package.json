@@ -7,9 +7,9 @@
     "dev": "NODE_ENV=development ./node_modules/.bin/nodemon bin/www",
     "prd": "pm2 start bin/www",
     "test": "NODE_ENV=test echo \"Error: no test specified\" && exit 1",
-    "pm2": "./node_modules/pm2/bin/pm2 start ./bin/www --name='blog'",
     "stop": "ps -ef|grep pm2|grep -v grep|cut -c 9-15|xargs kill -9",
-    "move": "rm -rf /var/kfc/blog-node && cp -r . /var/kfc/blog-node && cd /var/kfc/blog-node"
+    "move": "rm -rf /var/kfc/blog-node && cp -r . /var/kfc/blog-node",
+    "pm2": "cd /var/kfc/blog-node && pwd && ls && ./node_modules/pm2/bin/pm2 start ./bin/www --name='blog'"    
   },
   "dependencies": {
     "debug": "^2.6.3",
