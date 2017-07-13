@@ -81,7 +81,9 @@ class ArticleController {
         let pageSize = ctx.header['x-page-size'] ? +ctx.header['x-page-size'] : 10;
         let page = (currentPage - 1) * pageSize;
 
-        let result = await articleDao.getList(ctx.query.title, page, pageSize);
+        let title = ctx.query.title || '';
+
+        let result = await articleDao.getList(title, page, pageSize);
         ctx.body = result;
     }
 
