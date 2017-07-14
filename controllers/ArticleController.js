@@ -23,16 +23,16 @@ class ArticleController {
 
         let result =  await articleDao.get(insertId);
         let tags =  await tagDao.getByArticleId(insertId);
-        result.tags = tags.map(v => v.name);
+        result.tags = tags.map(v => v.tag_name);
 
         ctx.body = result
     }
 
     async remove(ctx, next) {
-        let userId = ctx.state.user;
-        let articleId = ctx.params.id;
+        let userId = +ctx.state.user;
+        let articleId = +ctx.params.id;
 
-        await articleDao.remove(userId, articleId);
+        await articleDao.remove(articleId, userId);
 
         ctx.status = 204;
         ctx.body = 'No Content'

@@ -6,14 +6,18 @@ class ArticleDao {
         let { userId,title,content,readCount,tags } = article;
         await global.connection.beginTransaction();
         let articleResult = await global.connection.query($sql.article.insert, [userId,title,content,readCount]);
-        let insertTags = tags.map(v => {
-            return {
+        let insertTags = [];
+        for (let v of tags) {
+            await global.connection.query($sql.tag.insert, v);
+
+            insertTags.push({
                 articleId: articleResult.insertId,
                 name: v
-            }
-        })
+            })
+        }
+        
         for (let val of insertTags) {
-            await global.connection.query($sql.tag.insert, [val.articleId, val.name]);
+            await global.connection.query($sql.articleTag.insert, [val.articleId, val.name]);
         }
         await global.connection.commit().catch(e => global.connection.rollback);
 
@@ -22,9 +26,11 @@ class ArticleDao {
 
     async remove(articleId, userId) {
         await global.connection.beginTransaction();
+        console.log(articleId, userId)
+        console.log($sql.article.remove)
         await global.connection.query($sql.article.remove, [articleId, userId]);
         await global.connection.query($sql.comment.removeByArticleId, [articleId, userId]);
-        await global.connection.query($sql.tag.removeByArticleId, articleId);
+        await global.connection.query($sql.articleTag.removeByArticleId, articleId);
         await global.connection.query($sql.praise.remove, [articleId, userId]);
         return await global.connection.commit().catch(e => global.connection.rollback);
     }
@@ -49,7 +55,7 @@ class ArticleDao {
         await global.connection.beginTransaction();
         let list = await global.connection.query($sql.article.queryByUserid, [userId, page, pageSize]);
         for (let val of list) {
-            let tagList = await global.connection.query($sql.tag.queryByArticleId, val.id);
+            let tagList = await global.connection.query($sql.articleTag.queryByArticleId, val.id);
             val.tags = tagList.map(v => v.name)
         }
         await global.connection.commit().catch(e => global.connection.rollback);
@@ -60,7 +66,7 @@ class ArticleDao {
         await global.connection.beginTransaction();
         let list = await global.connection.query($sql.article.queryAll, [title, page, pageSize]);
         for (let val of list) {
-            let tagList = await global.connection.query($sql.tag.queryByArticleId, val.id);
+            let tagList = await global.connection.query($sql.articleTag.queryByArticleId, val.id);
             val.tags = tagList.map(v => v.name)
         }
         await global.connection.commit().catch(e => global.connection.rollback);
@@ -79,9 +85,9 @@ class ArticleDao {
                     SELECT
                         article_id
                     FROM
-                        tag
+                        article_tag
                     WHERE
-                        name = '${tag}'
+                        tag_name = '${tag}'
                 ) AS table${index}`
 
                 tableList.push(`table${index}`)
@@ -109,13 +115,16 @@ class ArticleDao {
                 ORDER BY id
                 LIMIT ${page},${pageSize};`;
         } else {
-            sql = `select * from article_view where id in (select article_id from tag where name='${tags[0]}') limit ${page},${pageSize};`
+            sql = `select * from article_view where id in (select article_id from article_tag where tag_name='${tags[0]}') limit ${page},${pageSize};`
         }
+
+        console.log('==========================')
+        console.log(sql)
 
         let list = await global.connection.query(sql);
         for (let val of list) {
-            let tagList = await global.connection.query($sql.tag.queryByArticleId, val.id);
-            val.tags = tagList.map(v => v.name)
+            let tagList = await global.connection.query($sql.articleTag.queryByArticleId, val.id);
+            val.tags = tagList.map(v => v.tag_name)
         }
         await global.connection.commit().catch(e => global.connection.rollback);
         return list;
