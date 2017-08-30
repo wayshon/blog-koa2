@@ -19,7 +19,7 @@ class UserController {
         if (tool.isBlank(req.nick_name)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 nick_name');
         if (tool.isBlank(req.email)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 email');
         if (tool.isBlank(req.mobile)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 mobile');
-        if (tool.isBlank(req.manager)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 manager');
+        // if (tool.isBlank(req.manager)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 manager');
 
         let userName = req.user_name,
             md5 = crypto.createHash('md5'),
@@ -28,7 +28,7 @@ class UserController {
             email = req.email,
             mobile = req.mobile,
             avatar = req.avatar || '',
-            manager = req.manager;
+            manager = req.manager || 3;
             
         let checkUsers = await uesrDao.getByName(userName);
         if (checkUsers.length > 0) throw new ApiError(ApiErrorNames.USER_EXISTED);
