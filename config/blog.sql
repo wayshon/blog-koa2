@@ -11,7 +11,7 @@
  Target Server Version : 50718
  File Encoding         : utf-8
 
- Date: 09/18/2017 23:52:09 PM
+ Date: 09/19/2017 01:04:10 AM
 */
 
 SET NAMES utf8;
@@ -33,6 +33,13 @@ CREATE TABLE `article` (
 ) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
+--  Records of `article`
+-- ----------------------------
+BEGIN;
+INSERT INTO `article` VALUES ('30', '10', 'numberone', null, '21', '2017-09-18 23:04:45', '2017-09-19 00:11:28');
+COMMIT;
+
+-- ----------------------------
 --  Table structure for `article_tag`
 -- ----------------------------
 DROP TABLE IF EXISTS `article_tag`;
@@ -49,6 +56,13 @@ CREATE TABLE `article_tag` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
+--  Records of `article_tag`
+-- ----------------------------
+BEGIN;
+INSERT INTO `article_tag` VALUES ('30', '标签1');
+COMMIT;
+
+-- ----------------------------
 --  Table structure for `comment`
 -- ----------------------------
 DROP TABLE IF EXISTS `comment`;
@@ -61,6 +75,13 @@ CREATE TABLE `comment` (
   `update_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+--  Records of `comment`
+-- ----------------------------
+BEGIN;
+INSERT INTO `comment` VALUES ('1', '10', '30', 'this is comment', '2017-09-18 23:30:32', '2017-09-18 23:30:32'), ('2', '10', '30', '这是评论', '2017-09-18 23:49:22', '2017-09-18 23:49:22');
+COMMIT;
 
 -- ----------------------------
 --  Table structure for `praise`
@@ -99,6 +120,13 @@ CREATE TABLE `tag` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
+--  Records of `tag`
+-- ----------------------------
+BEGIN;
+INSERT INTO `tag` VALUES ('标签1', '2017-09-18 23:59:23', '2017-09-18 23:59:23');
+COMMIT;
+
+-- ----------------------------
 --  Table structure for `user`
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
@@ -117,21 +145,28 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
+--  Records of `user`
+-- ----------------------------
+BEGIN;
+INSERT INTO `user` VALUES ('10', 'wayshon', '123456', '老王', 'wayshon@qq.com', '131131131131', 'https://www.baidu.com/img/baidu_jgylogo3.gif', '1', '2017-09-18 23:04:10', '2017-09-18 23:04:10');
+COMMIT;
+
+-- ----------------------------
 --  View structure for `article_view`
 -- ----------------------------
 DROP VIEW IF EXISTS `article_view`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `article_view` AS select `article`.`id` AS `id`,`article`.`user_id` AS `user_id`,`article`.`title` AS `title`,`article`.`content` AS `content`,`article`.`create_at` AS `create_at`,`article`.`update_at` AS `update_at`,`article`.`read_count` AS `read_count`,`user`.`avatar` AS `avatar`,`user`.`nick_name` AS `nick_name`,count(`comment`.`article_id`) AS `comment_count`,count(`reprint`.`from_id`) AS `reprint_count`,count(`praise`.`article_id`) AS `praise_count` from ((((`article` left join `user` on((`article`.`user_id` = `user`.`id`))) left join `comment` on((`article`.`id` = `comment`.`article_id`))) left join `reprint` on((`article`.`id` = `reprint`.`from_id`))) left join `praise` on((`article`.`id` = `praise`.`article_id`))) group by `article`.`id`;
+CREATE VIEW `article_view` AS select `article`.`id` AS `id`,`article`.`user_id` AS `user_id`,`article`.`title` AS `title`,`article`.`content` AS `content`,`article`.`create_at` AS `create_at`,`article`.`update_at` AS `update_at`,`article`.`read_count` AS `read_count`,`user`.`avatar` AS `avatar`,`user`.`nick_name` AS `nick_name`,count(`comment`.`article_id`) AS `comment_count`,count(`reprint`.`from_id`) AS `reprint_count`,count(`praise`.`article_id`) AS `praise_count` from ((((`article` left join `user` on((`article`.`user_id` = `user`.`id`))) left join `comment` on((`article`.`id` = `comment`.`article_id`))) left join `reprint` on((`article`.`id` = `reprint`.`from_id`))) left join `praise` on((`article`.`id` = `praise`.`article_id`))) group by `article`.`id`;
 
 -- ----------------------------
 --  View structure for `comment_view`
 -- ----------------------------
 DROP VIEW IF EXISTS `comment_view`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `comment_view` AS select `comment`.`id` AS `id`,`comment`.`user_id` AS `user_id`,`comment`.`article_id` AS `article_id`,`comment`.`content` AS `content`,`comment`.`create_at` AS `create_at`,`comment`.`update_at` AS `update_at`,`user`.`nick_name` AS `nick_name` from (`comment` left join `user` on((`comment`.`user_id` = `user`.`id`)));
+CREATE VIEW `comment_view` AS select `comment`.`id` AS `id`,`comment`.`user_id` AS `user_id`,`comment`.`article_id` AS `article_id`,`comment`.`content` AS `content`,`comment`.`create_at` AS `create_at`,`comment`.`update_at` AS `update_at`,`user`.`nick_name` AS `nick_name` from (`comment` left join `user` on((`comment`.`user_id` = `user`.`id`)));
 
 -- ----------------------------
 --  View structure for `praise_view`
 -- ----------------------------
 DROP VIEW IF EXISTS `praise_view`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `praise_view` AS select `praise`.`user_id` AS `user_id`,`praise`.`article_id` AS `article_id`,`praise`.`create_at` AS `create_at`,`praise`.`update_at` AS `update_at`,`user`.`nick_name` AS `nick_name` from (`praise` left join `user` on((`praise`.`user_id` = `user`.`id`)));
+CREATE VIEW `praise_view` AS select `praise`.`user_id` AS `user_id`,`praise`.`article_id` AS `article_id`,`praise`.`create_at` AS `create_at`,`praise`.`update_at` AS `update_at`,`user`.`nick_name` AS `nick_name` from (`praise` left join `user` on((`praise`.`user_id` = `user`.`id`)));
 
 SET FOREIGN_KEY_CHECKS = 1;

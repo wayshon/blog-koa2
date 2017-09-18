@@ -7,10 +7,10 @@ module.exports = {
     port: 6001,         //服务端口号
     mysqlConfig: {
         user: 'root',
-        // host: 'rm-bp1oik8b2i008667ho.mysql.rds.aliyuncs.com',   //TEDMysql
-        // password: 'Sloth666',
-        host: 'localhost',
-        password: '123456',
+        host: 'rm-bp1oik8b2i008667ho.mysql.rds.aliyuncs.com',   //TEDMysql
+        password: 'Sloth666',
+        // host: 'localhost',
+        // password: '123456',
         database: 'blog',
         dbPort: 3306,
         connectionLimit: 10,
