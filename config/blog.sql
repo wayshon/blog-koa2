@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : TED
+ Source Server         : blog
  Source Server Type    : MySQL
  Source Server Version : 50718
- Source Host           : 106.14.40.56
+ Source Host           : localhost
  Source Database       : blog
 
  Target Server Type    : MySQL
  Target Server Version : 50718
  File Encoding         : utf-8
 
- Date: 07/14/2017 11:02:05 AM
+ Date: 09/18/2017 23:52:09 PM
 */
 
 SET NAMES utf8;
@@ -30,7 +30,7 @@ CREATE TABLE `article` (
   `create_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 --  Table structure for `article_tag`
@@ -56,11 +56,11 @@ CREATE TABLE `comment` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `article_id` int(11) NOT NULL,
-  `content` varchar(255) NOT NULL,
+  `content` varchar(255) CHARACTER SET utf8 NOT NULL,
   `create_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 --  Table structure for `praise`
@@ -114,7 +114,7 @@ CREATE TABLE `user` (
   `create_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 --  View structure for `article_view`

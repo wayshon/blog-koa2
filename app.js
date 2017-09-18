@@ -9,10 +9,6 @@ const bodyparser = require('koa-bodyparser')
 const logUtil = require('./utils/LogUtil');
 const koaBody = require('koa-body');
 
-const router = require('koa-router')();
-const rou = require('./routes');
-const api = require('./routes/api');
-
 const responseFormatter = require('./middlewares/ResponseFormatter');
 const jwtFilter = require("./middlewares/JwtFilter");
 
@@ -20,6 +16,10 @@ const ApiError = require('./error/ApiError');
 
 // const Raven = require('raven');
 // Raven.config('http://8670ee1183b54337a53cb8bc7cd15eae:72324620852c4bc691795d0ffccc83cb@106.14.40.56:9000/3').install();
+
+const cors = require('koa2-cors');
+
+app.use(cors());
 
 app.use(async (ctx, next) => {
   await next();
@@ -135,8 +135,14 @@ app.use((ctx, next) => {
 app.use(responseFormatter('^/api'));
 
 // routes
+const router = require('koa-router')();
+const rou = require('./routes');
+const api = require('./routes/api');
+const graphql = require('./routes/graphql');
+
 router.use('/', rou.routes(), rou.allowedMethods());
 router.use('/api', api.routes(), api.allowedMethods());
+router.use('/graphql', graphql.routes(), graphql.allowedMethods());
 app.use(router.routes(), router.allowedMethods());
 
 module.exports = app
