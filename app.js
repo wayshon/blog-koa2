@@ -18,8 +18,8 @@ const jwtFilter = require("./middlewares/JwtFilter");
 
 const ApiError = require('./error/ApiError');
 
-const Raven = require('raven');
-Raven.config('http://8670ee1183b54337a53cb8bc7cd15eae:72324620852c4bc691795d0ffccc83cb@106.14.40.56:9000/3').install();
+// const Raven = require('raven');
+// Raven.config('http://8670ee1183b54337a53cb8bc7cd15eae:72324620852c4bc691795d0ffccc83cb@106.14.40.56:9000/3').install();
 
 app.use(async (ctx, next) => {
   await next();
@@ -34,9 +34,9 @@ app.use((ctx, next) => {
   return next().catch((err) => {
     console.log(err)
     
-    Raven.captureException(err, function (err, eventId) {
-        console.log('Reported error ' + eventId);
-    });
+    // Raven.captureException(err, function (err, eventId) {
+    //     console.log('Reported error ' + eventId);
+    // });
 
     if(!(err instanceof ApiError)) {
       ctx.status = 500;
