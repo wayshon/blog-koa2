@@ -42,7 +42,9 @@ class ArticleController {
         let articleId = ctx.params.id;
         let req = ctx.request.body;
 
-        if (tool.isBlank(req.title)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 title');
+        // if (tool.isBlank(req.title)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 title');
+
+        if (tool.isBlank(req.title) && tool.isBlank(req.content)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 参数');
 
         let article = {
             id: articleId,
