@@ -36,6 +36,14 @@ class PraiseController {
         let result = await praiseDao.getList(articleId, page, pageSize);
         ctx.body = result;
     }
+
+    async getByArticleId(ctx, next) {
+        let userId = ctx.state.user;
+        let articleId = ctx.params.article_id;
+
+        let praise =  await praiseDao.get(articleId, userId);
+        ctx.body = praise;
+    }
 }
 
 module.exports = new PraiseController();

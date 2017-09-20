@@ -63,9 +63,14 @@ class ArticleController {
     async getById(ctx, next) {
         let articleId = ctx.params.id;
         let article =  await articleDao.get(articleId);
-        let tags =  await tagDao.getByArticleId(articleId);
-        article.tags = tags;
-        ctx.body = article;
+
+        if (article === undefined) {
+            ctx.body = null;
+        } else {
+            let tags =  await tagDao.getByArticleId(articleId);
+            article.tags = tags;
+            ctx.body = article;
+        }
     }
 
     async getListByUserId(ctx, next) {
@@ -84,6 +89,12 @@ class ArticleController {
         let page = (currentPage - 1) * pageSize;
 
         let title = ctx.query.title || '';
+
+        let count = await articleDao.getListCount(title);
+        let total = count[0].total;
+        ctx.res.setHeader("x-current-page", currentPage);
+        ctx.res.setHeader("x-page-size", pageSize);
+        ctx.res.setHeader("x-total", total);
 
         let result = await articleDao.getList(title, page, pageSize);
         ctx.body = result;

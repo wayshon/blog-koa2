@@ -7,7 +7,7 @@ class TagDao {
     }
 
     async getList(page, pageSize) {
-        return await global.connection.query($sql.articleTag.queryAll, [page, pageSize]);
+        return await global.connection.query($sql.tag.queryAll, [page, pageSize]);
     }
 }
 

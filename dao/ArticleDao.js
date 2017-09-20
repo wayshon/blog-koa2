@@ -26,8 +26,8 @@ class ArticleDao {
 
     async remove(articleId, userId) {
         await global.connection.beginTransaction();
-        console.log(articleId, userId)
-        console.log($sql.article.remove)
+        // console.log(articleId, userId)
+        // console.log($sql.article.remove)
         await global.connection.query($sql.article.remove, [articleId, userId]);
         await global.connection.query($sql.comment.removeByArticleId, [articleId, userId]);
         await global.connection.query($sql.articleTag.removeByArticleId, articleId);
@@ -43,6 +43,10 @@ class ArticleDao {
     async get(id) {
         await global.connection.beginTransaction();
         let readCountOld = await global.connection.query($sql.article.queryReadCount, id);
+
+        if (!readCountOld[0])
+        return undefined;
+
         let readCount = readCountOld[0].read_count;
         readCount++;
         await global.connection.query($sql.article.updateReadCount, [readCount, id]);
@@ -67,7 +71,7 @@ class ArticleDao {
         let list = await global.connection.query($sql.article.queryAll, [title, page, pageSize]);
         for (let val of list) {
             let tagList = await global.connection.query($sql.articleTag.queryByArticleId, val.id);
-            val.tags = tagList.map(v => v.name)
+            val.tags = tagList.map(v => v.tag_name)
         }
         await global.connection.commit().catch(e => global.connection.rollback);
         return list;
@@ -118,8 +122,8 @@ class ArticleDao {
             sql = `select * from article_view where id in (select article_id from article_tag where tag_name='${tags[0]}') limit ${page},${pageSize};`
         }
 
-        console.log('==========================')
-        console.log(sql)
+        // console.log('==========================')
+        // console.log(sql)
 
         let list = await global.connection.query(sql);
         for (let val of list) {
@@ -128,6 +132,13 @@ class ArticleDao {
         }
         await global.connection.commit().catch(e => global.connection.rollback);
         return list;
+    }
+
+    async getListCount(title, page, pageSize) {
+        await global.connection.beginTransaction();
+        let count = await global.connection.query($sql.article.queryCount, title);
+        await global.connection.commit().catch(e => global.connection.rollback);
+        return count;
     }
 
 }
