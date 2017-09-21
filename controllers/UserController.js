@@ -66,8 +66,19 @@ class UserController {
         if (tool.isBlank(userId)) throw new ApiError(ApiErrorNames.PARAMS_ERROR, '缺少 userId');
 
         let result = await uesrDao.get(userId);
-        ctx.body = result[0]
-        
+        let user = result[0];
+
+        if (!user) {
+            ctx.body = null;
+        } else {
+            ctx.body = {
+                nick_name: user.nick_name,
+                email: user.email,
+                mobile: user.mobile,
+                avatar: user.avatar,
+                create_at: user.create_at
+            }
+        }
     }
 }
 

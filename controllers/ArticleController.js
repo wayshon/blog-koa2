@@ -79,7 +79,15 @@ class ArticleController {
         let pageSize = ctx.header['x-page-size'] ? +ctx.header['x-page-size'] : 10;
         let page = (currentPage - 1) * pageSize;
 
-        let result = await articleDao.getByUserId(userId, page, pageSize);
+        let title = ctx.query.title || '';
+
+        let count = await articleDao.getListCountByUserId(userId, title);
+        let total = count[0].total || 0;
+        ctx.res.setHeader("x-current-page", currentPage);
+        ctx.res.setHeader("x-page-size", pageSize);
+        ctx.res.setHeader("x-total", total);
+
+        let result = await articleDao.getByUserId(userId, title, page, pageSize);
         ctx.body = result;
     }
 
@@ -91,7 +99,7 @@ class ArticleController {
         let title = ctx.query.title || '';
 
         let count = await articleDao.getListCount(title);
-        let total = count[0].total;
+        let total = count[0].total || 0;
         ctx.res.setHeader("x-current-page", currentPage);
         ctx.res.setHeader("x-page-size", pageSize);
         ctx.res.setHeader("x-total", total);

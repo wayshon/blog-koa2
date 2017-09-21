@@ -55,12 +55,12 @@ class ArticleDao {
         return article[0]
     }
 
-    async getByUserId(userId, page, pageSize) {
+    async getByUserId(userId, title, page, pageSize) {
         await global.connection.beginTransaction();
-        let list = await global.connection.query($sql.article.queryByUserid, [userId, page, pageSize]);
+        let list = await global.connection.query($sql.article.queryByUserid, [userId, title, page, pageSize]);
         for (let val of list) {
             let tagList = await global.connection.query($sql.articleTag.queryByArticleId, val.id);
-            val.tags = tagList.map(v => v.name)
+            val.tags = tagList.map(v => v.tag_name)
         }
         await global.connection.commit().catch(e => global.connection.rollback);
         return list;
@@ -137,6 +137,13 @@ class ArticleDao {
     async getListCount(title, page, pageSize) {
         await global.connection.beginTransaction();
         let count = await global.connection.query($sql.article.queryCount, title);
+        await global.connection.commit().catch(e => global.connection.rollback);
+        return count;
+    }
+
+    async getListCountByUserId(userId, title, page, pageSize) {
+        await global.connection.beginTransaction();
+        let count = await global.connection.query($sql.article.queryCountByUserId, [userId, title]);
         await global.connection.commit().catch(e => global.connection.rollback);
         return count;
     }
