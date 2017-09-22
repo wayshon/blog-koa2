@@ -4,6 +4,7 @@ const Comment = `
     id: Int!
     user_id: Int!
     nick_name: String!
+    avatar: String!
     article_id: Int!
     content: String
     create_at: String

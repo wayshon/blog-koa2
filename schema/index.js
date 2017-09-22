@@ -12,12 +12,12 @@
 //     {id: 444,user_id: 44,title: 'title4',content: 'content4',read_count: 4,creat_at: '2017-04',update_at: '2017-09'}
 // ]
 
-const comments = [
-    {id: 1111,user_id: 11,article_id: 30,content: 'comment cotent1',creat_at: '2017-01',update_at: '2017-06'},
-    {id: 2222,user_id: 22,article_id: 30,content: 'comment cotent2',creat_at: '2017-02',update_at: '2017-07'},
-    {id: 3333,user_id: 33,article_id: 30,content: 'comment cotent3',creat_at: '2017-03',update_at: '2017-08'},
-    {id: 4444,user_id: 44,article_id: 30,content: 'comment cotent4',creat_at: '2017-04',update_at: '2017-09'}
-]
+// const comments = [
+//     {id: 1111,user_id: 11,article_id: 30,content: 'comment cotent1',creat_at: '2017-01',update_at: '2017-06'},
+//     {id: 2222,user_id: 22,article_id: 30,content: 'comment cotent2',creat_at: '2017-02',update_at: '2017-07'},
+//     {id: 3333,user_id: 33,article_id: 30,content: 'comment cotent3',creat_at: '2017-03',update_at: '2017-08'},
+//     {id: 4444,user_id: 44,article_id: 30,content: 'comment cotent4',creat_at: '2017-04',update_at: '2017-09'}
+// ]
 
 /**
  * 上面是假数据，需换成真接口
