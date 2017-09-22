@@ -65,11 +65,15 @@ class UtilsController {
         let file = req.files.file;
 
         let userid = ctx.state.user || 'test',
-            imgpath = `images/${userid}/${file.name}`;
+            imgpath = `/images/${userid}/${file.name}`;
             // absolutePath = `http://${iptable['en0:1']}:${config.port}/${imgpath}`;
 
+        if (!fs.existsSync(`./public/images/${userid}`)) {
+            fs.mkdirSync(`./public/images/${userid}`);
+        }
+
         let reader = fs.createReadStream(file.path),
-            stream = fs.createWriteStream(`./public/${imgpath}`);
+            stream = fs.createWriteStream(`./public${imgpath}`);
 
         reader.pipe(stream);
 
