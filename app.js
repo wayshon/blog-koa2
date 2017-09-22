@@ -143,6 +143,9 @@ const graphql = require('./routes/graphql');
 router.use('/', rou.routes(), rou.allowedMethods());
 router.use('/api', api.routes(), api.allowedMethods());
 router.use('/graphql', graphql.routes(), graphql.allowedMethods());
+router.get('/eat', async (ctx, next) => { await ctx.render('what-eat') })
+router.get('/upload', async (ctx, next) => { await ctx.render('upload') })
 app.use(router.routes(), router.allowedMethods());
 
-module.exports = app
+
+module.exports = app;
